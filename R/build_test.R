@@ -15,6 +15,10 @@ download_sra(amplicon='ITS2', sample = 'control', dir.out = 'data')
 
 files = list.files('data', pattern='.fastq', full.names = TRUE)
 
-
-
+BLAST_pipeline(files[1], 
+               blast_args =  NULL,
+               blast_db = '/usr/share/data/ncbi/nt/nt.fa',
+               tax_db = '/usr/share/data/taxonomizr/',
+               parallel = TRUE,
+               nclus = 48)
 

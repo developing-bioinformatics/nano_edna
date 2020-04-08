@@ -103,3 +103,59 @@ lca2 = function(x) {
     mutate(species = newtax$species)
   return(ret)
 }
+
+BLAST_pipeline = function(fastq, 
+                          blast_args =  NULL,
+                          blast_db = NULL,
+                          tax_db = NULL,
+                          parallel = TRUE,
+                          nclus = 4
+                          ) { 
+  require(rBLAST)
+  require(ShortRead)
+  require(Biostrings)
+  require(dplyr)
+  require(taxonomizr)
+  
+  # load taxonomizr databases
+  tax_db_files = list.files(tax_db, full.names = TRUE)
+  nodes = tax_db_files[grepl('nodes', tax_db_files)]
+  names = tax_db_files[grepl('names', tax_db_files)]
+  accession = tax_db_files[grepl('accessionTaxa', tax_db_files)]
+  taxaNodes<-read.nodes.sql(nodes)
+  taxaNames<-read.names.sql(names)
+  
+  # read fastq
+  dna = readFastq(fastq)
+  reads = sread(dna)
+  qscores = quality(dna) 
+  
+  ## blast
+  bl <- blast(db=blast_db)
+  
+  # optional parallel
+  if (parallel == TRUE) {
+    require(parallel)
+    wpredict = function(x){return(predict(bl, x, , BLAST_args = blast_args))}
+    clus = makeCluster(nclus, type ='FORK');
+    splits = clusterSplit(clus, reads)
+    p_cl = parLapply(clus, splits, wpredict)
+    stopCluster(clus)
+    return(p_cl)
+    
+  } else {
+    cl <- predict(bl, reads, BLAST_args = blast_args)
+  }
+  accid = as.character(cl$SubjectID) # accession IDs of BLAST hits
+  #takes accession number and gets the taxonomic ID
+  ids<-accessionToTaxa(accid, accession)
+  #taxlist displays the taxonomic names from each ID #
+  taxlist=getTaxonomy(ids, taxaNodes, taxaNames)
+  cltax=cbind(cl,taxlist)
+  
+  return(cltax)
+  
+  
+  # optional filtering?
+
+}
