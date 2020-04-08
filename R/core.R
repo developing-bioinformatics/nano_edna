@@ -3,31 +3,76 @@
 
 ## Download SRA data files function
 #
-#
-#
-
-download_sra = function(proj="PRJNA605442", retmax=60, ... ){
+download_sra = function(proj="PRJNA605442", 
+                        dir.out = 'data', 
+                        SRR = NULL, 
+                        amplicon = NULL, 
+                        sample = NULL, 
+                        retmax=60, ... ){
+  # always search on project ID
+  # sometimes search on sample name (Control, Swamp, Pond)
+  # sometimes search on amplicon
   require(rentrez)
-  require(ShortRead)
-  require(Biostrings)
   require(xml2)
   require(dplyr)
   r_search <- entrez_search(db="sra", term=paste(proj, "[GPRJ]", sep=''), retmax=60)
   id_fetch <- entrez_fetch(db="sra", id=r_search$ids, rettype = 'xml')
   doc <- read_xml(id_fetch)
-  SRAFile <- doc %>% 
-    xml_find_all("//RUN_SET") %>% 
-    xml_find_all("//SRAFile") %>% 
-    xml_attr('url') 
+  RUNSet <- doc %>% 
+    xml_find_all("//RUN_SET") 
+  RUNInfo <- RUNSet %>%
+    xml_find_all("//RUN")
+  POOL <- RUNSet %>%
+    xml_find_all("//Member")
+  SRAFile = RUNSet %>% 
+    xml_find_all("//SRAFile")
+  
+  accession = RUNInfo %>%
+    xml_attr('accession')
+  url = SRAFile %>% 
+    xml_attr('url')
+  filename = SRAFile %>% 
+    xml_attr('filename')
+  sample_name = POOL %>%
+    xml_attr('sample_name')
+  
+  #if not exist, create dir 'data' or proj
+  
+  if(!dir.exists(dir.out)){
+    dir.create(dir.out)
+  } 
   
   # ammend to allow searching on other terms e.g., amplicon gene target, sample name (Swamp, Pond), ????
   
-  get_one = SRAFile[grepl("SRR11043468", SRAFile)]
-  download.file(SRAFile[1], 'test.fastq')
-  dna = readFastq('.', pattern='test.fastq') ## On to BLAST analysis >>>
-  
-  
-  
+  if(!is.null(SRR)) {
+    # download file for SRR
+    get_one = grepl(SRR, SRAFile) & grepl('fastq', SRAFile)
+    targ_url = url[get_one]
+    file = filename[get_one]
+    download.file(targ_url, paste(dir.out, file, sep='/'))
+    #dna = readFastq('.', pattern='test.fastq') ## On to BLAST analysis >>>
+  } else if (!is.null(amplicon) & !is.null(sample)){
+    get_list = grepl(amplicon, sample_name) & grepl(sample, sample_name) & grepl('fastq', SRAFile)
+    targ_url = url[get_list]
+    file = filename[get_list]
+    for(g in 1:length(targ_url)){
+      download.file(targ_url[g], paste(dir.out, file[g], sep='/'))
+    }
+  } else if(!is.null(amplicon)) {
+    get_list = grepl(amplicon, sample_name) & grepl('fastq', SRAFile)
+    targ_url = url[get_list]
+    file = filename[get_list]
+    for(g in 1:length(targ_url)){
+      download.file(targ_url[g], paste(dir.out, file[g], sep='/'))
+    }
+  } else if(!is.null(sample)){
+    get_list = grepl(sample, sample_name) & grepl('fastq', SRAFile)
+    targ_url = url[get_list]
+    file = filename[get_list]
+    for(g in 1:length(targ_url)){
+      download.file(targ_url[g], paste(dir.out, file[g], sep='/'))
+    }
+  }
 }
 
 ## Lowest Common Ancestor
