@@ -80,35 +80,80 @@ download_sra = function(proj="PRJNA605442",
 # Add filtering options?
 # Add output options (e.g., level='genus')
 
-lca2 = function(x) {
+lca = function(results, parallel=FALSE, nclus=4) {
   require(dplyr)
   require(multidplyr)
-  taxnames = c('superkingdom', 'phylum', 'order', 'family', 'genus', 'species')
-  shortnames = apply(x[,taxnames], 2, unique)
-  countshnames = sapply(shortnames, length)
-  numcount = countshnames==1
-  lastuni = tail(names(shortnames[numcount==T]), n=1)
-  nombre = as.data.frame(x[1,which(colnames(x) == lastuni)])
-  newtax <- as.list(ifelse(countshnames==1,shortnames,NA))
   
-  ret = x %>% 
-    mutate(last_common = as.character(nombre[[1]])) %>%
-    mutate(level_lca = lastuni) %>%
-    mutate(superkingdom = newtax$superkingdom) %>%
-    mutate(phylum = newtax$phylum) %>%
-    mutate(class = newtax$class) %>%
-    mutate(order = newtax$order) %>%
-    mutate(family = newtax$family) %>%
-    mutate(genus = newtax$genus) %>%
-    mutate(species = newtax$species)
-  return(ret)
+  sub_lca = function(x) {
+    nombre = vector()
+    taxnames = c('superkingdom',
+                 'phylum',
+                 'order',
+                 'family',
+                 'genus',
+                 'species')
+    shortnames = apply(x[, taxnames], 2, unique)
+    countshnames = sapply(shortnames, length)
+    numcount = countshnames == 1
+    lastuni = tail(names(shortnames[numcount == T]), n = 1)
+    nombre = as.data.frame(x[1, which(colnames(x) == lastuni)])
+    newtax <- as.list(ifelse(countshnames == 1, shortnames, NA))
+    
+    #if(length(nombre) == 0){ 
+    if(all(is.na(newtax))) {
+      ret = x %>%
+        mutate(last_common = NA) %>%
+        mutate(level_lca = NA) %>%
+        mutate(superkingdom = NA) %>%
+        mutate(phylum = NA) %>%
+        mutate(class = NA) %>%
+        mutate(order = NA) %>%
+        mutate(family = NA) %>%
+        mutate(genus = NA) %>%
+        mutate(species = NA)
+    } else {
+      ret = x %>%
+        mutate(last_common = as.character(nombre[[1]])) %>%
+        mutate(level_lca = lastuni) %>%
+        mutate(superkingdom = newtax$superkingdom) %>%
+        mutate(phylum = newtax$phylum) %>%
+        mutate(class = newtax$class) %>%
+        mutate(order = newtax$order) %>%
+        mutate(family = newtax$family) %>%
+        mutate(genus = newtax$genus) %>%
+        mutate(species = newtax$species)
+    }
+    return(ret)
+  }
+  
+  if(parallel == TRUE){
+    
+    cluster <- new_cluster(nclus)
+    cluster_library(cluster, 'dplyr')
+    cluster_copy(cluster, 'sub_lca')
+    
+    
+    #split groups across multiple CPU cores
+    prepare = results %>%
+      group_by(QueryID) %>%
+      partition(cluster) %>%  #split groups into cluster units
+      do({sub_lca(.)}) %>%
+      collect()
+    
+    
+  } else {
+    prepare = results %>%
+      group_by(QueryID) %>%
+      do({sub_lca(.)})
+  }
+  return(prepare)
 }
 
 BLAST_pipeline = function(fastq, 
                           blast_args =  NULL,
                           blast_db = NULL,
                           tax_db = NULL,
-                          parallel = TRUE,
+                          parallel = FALSE,
                           nclus = 4
                           ) { 
   require(rBLAST)
@@ -141,7 +186,9 @@ BLAST_pipeline = function(fastq,
     splits = clusterSplit(clus, reads)
     p_cl = parLapply(clus, splits, wpredict)
     stopCluster(clus)
-    return(p_cl)
+    
+    cl = bind_rows(p_cl)
+    
     
   } else {
     cl <- predict(bl, reads, BLAST_args = blast_args)
@@ -154,8 +201,19 @@ BLAST_pipeline = function(fastq,
   cltax=cbind(cl,taxlist)
   
   return(cltax)
-  
-  
-  # optional filtering?
 
 }
+
+
+# Filter function
+#f1 = BLAST_filter(t1, E.max= 1e-50)
+BLAST_filter <- function(results = NULL, E.max=1, Perc.Ident.min = 0, ... ){
+  require(dplyr)
+  ret = results %>%
+    filter(E <= E.max) %>%
+    filter(Perc.Ident >= Perc.Ident.min)
+  
+  return(ret)
+  
+}
+
