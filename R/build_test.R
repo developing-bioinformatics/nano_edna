@@ -11,13 +11,13 @@ library(rBLAST)
 
 source('R/core.R')
 
-download_sra(amplicon='rbcLa', sample = 'Swamp', dir.out = 'data')
+download_sra(amplicon='psbA', sample = 'Swamp', dir.out = 'data')
 
 files = list.files('data', pattern='.fastq', full.names = TRUE)
 
 
-
-t1 = BLAST_pipeline(files[8], 
+#files should be one or more fastq files
+t1 = BLAST_pipeline(files[c(1,2)], 
                blast_args =  NULL,
                blast_db = '/usr/share/data/ncbi/nt/nt.fa',
                tax_db = '/usr/share/data/taxonomizr/',
@@ -35,7 +35,7 @@ f1.lca = lca(f1, parallel=T,  nclus = 24)
 f1.lca %>% 
   group_by(QueryID) %>%
   dplyr::slice(1) %>%
-  group_by(last_common) %>%
+  group_by(genus) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 

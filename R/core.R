@@ -49,7 +49,7 @@ download_sra = function(proj="PRJNA605442",
     get_one = grepl(SRR, SRAFile) & grepl('fastq', SRAFile)
     targ_url = url[get_one]
     file = filename[get_one]
-    download.file(targ_url, paste(dir.out, file, sep='/'))
+    download.file(targ_url, paste(dir.out, file, sep='/'), method = 'wget')
     #dna = readFastq('.', pattern='test.fastq') ## On to BLAST analysis >>>
   } else if (!is.null(amplicon) & !is.null(sample)){
     get_list = grepl(amplicon, sample_name) & grepl(sample, sample_name) & grepl('fastq', SRAFile)
@@ -63,21 +63,21 @@ download_sra = function(proj="PRJNA605442",
     targ_url = url[get_list]
     file = filename[get_list]
     for(g in 1:length(targ_url)){
-      download.file(targ_url[g], paste(dir.out, file[g], sep='/'))
+      download.file(targ_url[g], paste(dir.out, file[g], sep='/'), method = 'wget')
     }
   } else if(!is.null(sample)){
     get_list = grepl(sample, sample_name) & grepl('fastq', SRAFile)
     targ_url = url[get_list]
     file = filename[get_list]
     for(g in 1:length(targ_url)){
-      download.file(targ_url[g], paste(dir.out, file[g], sep='/'))
+      download.file(targ_url[g], paste(dir.out, file[g], sep='/'), method = 'wget')
     }
   }
 }
 
 ## Lowest Common Ancestor
-# To DO: -- Fix error with no taxonomy or single match
-# Add filtering options?
+# To DO: -- Fix error with no taxonomy or single match (check)
+# Add filtering options? (moved to filter function)
 # Add output options (e.g., level='genus')
 
 lca = function(results, parallel=FALSE, nclus=4) {
@@ -125,22 +125,16 @@ lca = function(results, parallel=FALSE, nclus=4) {
     }
     return(ret)
   }
-  
   if(parallel == TRUE){
-    
     cluster <- new_cluster(nclus)
     cluster_library(cluster, 'dplyr')
     cluster_copy(cluster, 'sub_lca')
-    
-    
     #split groups across multiple CPU cores
     prepare = results %>%
       group_by(QueryID) %>%
       partition(cluster) %>%  #split groups into cluster units
       do({sub_lca(.)}) %>%
       collect()
-    
-    
   } else {
     prepare = results %>%
       group_by(QueryID) %>%
