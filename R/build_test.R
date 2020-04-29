@@ -33,9 +33,11 @@ f1.lca = lca(f1, parallel=T,  nclus = 24)
 
 # plot
 f1.lca %>% 
+ # filter(Alignment.Length>=350) %>%
   group_by(QueryID) %>%
   dplyr::slice(1) %>%
   group_by(genus) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
+
 
