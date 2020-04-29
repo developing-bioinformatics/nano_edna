@@ -71,7 +71,14 @@ download_sra = function(proj="PRJNA605442",
     file = filename[get_list]
     for(g in 1:length(targ_url)){
       download.file(targ_url[g], paste(dir.out, file[g], sep='/'), method = 'wget')
-    }
+    } 
+  } else {
+    get_list = grepl('fastq', SRAFile)
+    targ_url = url[get_list]
+    file = filename[get_list]
+    for(g in 1:length(targ_url)){
+      download.file(targ_url[g], paste(dir.out, file[g], sep='/'), method = 'wget')
+    } 
   }
 }
 
@@ -99,8 +106,8 @@ lca = function(results, parallel=FALSE, nclus=4) {
     nombre = as.data.frame(x[1, which(colnames(x) == lastuni)])
     newtax <- as.list(ifelse(countshnames == 1, shortnames, NA))
     
-    #if(length(nombre) == 0){ 
-    if(all(is.na(newtax))) {
+   # if(length(nombre) == 0){ 
+    if(all(is.na(newtax)) | length(nombre) == 0) {
       ret = x %>%
         mutate(last_common = NA) %>%
         mutate(level_lca = NA) %>%
@@ -148,8 +155,9 @@ BLAST_pipeline = function(fastq,
                           blast_db = NULL,
                           tax_db = NULL,
                           parallel = FALSE,
-                          nclus = 4
-                          ) { 
+                          nclus = 4,
+                          save.hits=FALSE
+) { 
   require(rBLAST)
   require(ShortRead)
   require(Biostrings)
@@ -175,7 +183,10 @@ BLAST_pipeline = function(fastq,
   # optional parallel
   if (parallel == TRUE) {
     require(parallel)
-    wpredict = function(x){return(predict(bl, x, , BLAST_args = blast_args))}
+    wpredict = function(x){
+      return(predict(bl, x, , BLAST_args = blast_args))
+      
+    }
     clus = makeCluster(nclus, type ='FORK');
     splits = clusterSplit(clus, reads)
     p_cl = parLapply(clus, splits, wpredict)
@@ -195,6 +206,133 @@ BLAST_pipeline = function(fastq,
   cltax=cbind(cl,taxlist)
   
   return(cltax)
+  
+}
+
+
+
+BLAST_pipeline2 = function(fastq, 
+                          blast_args =  NULL,
+                          blast_db = NULL,
+                          tax_db = NULL,
+                          parallel = FALSE,
+                          nclus = 4,
+                          save.hits=FALSE, 
+                          E.max=1, 
+                          Perc.Ident.min = 0) { 
+  require(rBLAST)
+  require(ShortRead)
+  require(Biostrings)
+  require(dplyr)
+  require(tidyr)
+  require(taxonomizr)
+  
+  #for testing
+  # blast_args =  NULL
+  # blast_db = '/usr/share/data/ncbi/nt/nt.fa'
+  # tax_db = '/usr/share/data/taxonomizr/'
+  # parallel = TRUE
+  # nclus = 48
+  # save.hits=TRUE
+  # #end testing setup
+  
+  if(save.hits==TRUE){
+    if(dir.exists('blasthits')){} else {dir.create('blasthits')}
+  }
+  # load taxonomizr databases
+  tax_db_files = list.files(tax_db, full.names = TRUE)
+  nodes = tax_db_files[grepl('nodes', tax_db_files)]
+  names = tax_db_files[grepl('names', tax_db_files)]
+  accession = tax_db_files[grepl('accessionTaxa', tax_db_files)]
+  taxaNodes<-read.nodes.sql(nodes)
+  taxaNames<-read.names.sql(names)
+  
+  # read fastq
+  filename = basename(fastq)
+  dna = readFastq(fastq)
+  
+  ## blast
+  bl <- blast(db=blast_db)
+  
+  # optional parallel
+  if (parallel == TRUE) {
+    require(parallel)
+    wpredict = function(x){
+      pr = predict(bl, x@sread, BLAST_args = blast_args)
+      # get query IDs
+      hits = pr$QueryID %>% as.data.frame() 
+      colnames(hits) = 'QueryID'
+      hits =  hits %>% separate(QueryID, c("query", "id"), "_")
+      pr$QueryID = hits[,2]
+      
+      accid = as.character(pr$SubjectID) # accession IDs of BLAST hits
+      #takes accession number and gets the taxonomic ID
+      ids<-accessionToTaxa(accid, accession)
+      #taxlist displays the taxonomic names from each ID #
+      taxlist=getTaxonomy(ids, taxaNodes, taxaNames)
+      cltax=cbind(pr,taxlist)
+      
+      cltax = BLAST_filter(cltax, E.max = E.max, Perc.Ident.min = Perc.Ident.min)
+      return(cltax)
+    }
+    clus = makeCluster(nclus, type ='FORK');
+    splits = clusterSplit(clus, dna)
+    p_cl = parLapply(clus, splits, wpredict)
+    stopCluster(clus)
+    
+    #return(list(p_cl, splits))
+    # do hit collection
+    splits_keep = list()
+    for(i in 1:length(splits)){
+      splits_keep[[i]] = splits[[i]][unique(as.numeric(p_cl[[i]]$QueryID))] # keep only reads that have at least one blast hit
+    }
+    keep = splits_keep[[1]]
+    for(z in 2:length(splits_keep)){
+      keep = append(keep, splits_keep[[z]])
+    }
+    outfile = paste('blasthits/hits_', filename, sep='')
+    if(file.exists(outfile)) { file.remove(outfile) }
+    writeFastq(keep, file=outfile)
+    
+    
+    #return(p_cl)
+    
+    #add split_ID to Query_ID for lca to work
+    for(k in 1:length(p_cl)){
+      if(nrow(p_cl[[k]]) == 0){ next } else {
+        p_cl[[k]]$QueryID = paste(k, p_cl[[k]]$QueryID, sep='_')
+      }
+    }
+    isnot = lapply(p_cl, nrow) > 0
+    p_cl = p_cl[isnot]
+    cl = bind_rows(p_cl)
+    return(cl)
+    
+    
+  } else {
+    cl <- predict(bl, reads, BLAST_args = blast_args)
+    hits = cl$QueryID %>% as.data.frame() 
+    colnames(hits) = 'QueryID'
+    hits =  hits %>% separate(QueryID, c("query", "id"), "_")
+    cl$QueryID = hits[,2]
+    
+    accid = as.character(cl$SubjectID) # accession IDs of BLAST hits
+    #takes accession number and gets the taxonomic ID
+    ids<-accessionToTaxa(accid, accession)
+    #taxlist displays the taxonomic names from each ID #
+    taxlist=getTaxonomy(ids, taxaNodes, taxaNames)
+    cltax=cbind(cl,taxlist)
+    cltax = BLAST_filter(cltax, E.max = E.max, Perc.Ident.min = Perc.Ident.min)
+    
+    #write hits file
+    keep = dna[unique(as.numeric(cltax$QueryID))]
+   
+    outfile = paste('blasthits/hits_', filename, sep='')
+    if(file.exists(outfile)) { file.remove(outfile) }
+    writeFastq(keep, file=outfile)
+    
+    return(cltax)
+  }
 
 }
 
