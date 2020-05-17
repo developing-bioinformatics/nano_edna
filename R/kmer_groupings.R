@@ -5,6 +5,8 @@ library(parallel)
 library(parallelDist)
 library(dendextend)
 library(ggplot2)
+library(dplyr)
+library(ggdendro)
 
 nclus = 24
 dna = readFastq('blasthits', pattern='OHara_S1B_rbcL')
@@ -30,11 +32,11 @@ cltax = data.table::fread('targdb_out/t1.coll.24.csv', nThread=2)
 #run lca on cltax
 source('https://raw.githubusercontent.com/developing-bioinformatics/eDNA_BLAST/master/R/core.R')
 #source('R/core.R')
-lca.tax = lca(cltax, parallel=F, nclus = nclus)
+lca.tax = lca(cltax, parallel=T, nclus = nclus)
 lca.labels = lca.tax %>%
   group_by(QueryID) %>%
-  slice(1) 
-labels=  lca.tax %>% group_by(QueryID) %>% slice(1) %>% ungroup() %>% select(family) 
+  dplyr::slice(1) 
+labels=  lca.tax %>% group_by(QueryID) %>% dplyr::slice(1) %>% ungroup() %>% select(family) 
 labels = as.vector(labels$family) %>% tidyr::replace_na('unclassified')
 hc$labels = labels
 # recolor tips by label ID

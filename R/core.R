@@ -91,6 +91,14 @@ lca = function(results, parallel=FALSE, nclus=4) {
   require(dplyr)
   require(multidplyr)
   
+  results = results %>% filter(!is.na(phylum))
+  
+  
+  if(any(grepl('phylum', colnames(results)))){} else{
+    cat('Error: No Taxonomy\n')
+    return(NULL)
+  }
+  
   sub_lca = function(x) {
     nombre = vector()
     taxnames = c('superkingdom',
@@ -219,7 +227,8 @@ BLAST_pipeline2 = function(fastq,
                           nclus = 4,
                           save.hits=FALSE, 
                           E.max=1, 
-                          Perc.Ident.min = 0) { 
+                          Perc.Ident.min = 0,
+                          blast.type = 'blastn') { 
   require(rBLAST)
   require(ShortRead)
   require(Biostrings)
@@ -234,7 +243,7 @@ BLAST_pipeline2 = function(fastq,
   # parallel = TRUE
   # nclus = 48
   # save.hits=TRUE
-  # #end testing setup
+  #end testing setup
   
   if(save.hits==TRUE){
     if(dir.exists('blasthits')){} else {dir.create('blasthits')}
@@ -250,6 +259,10 @@ BLAST_pipeline2 = function(fastq,
   # read fastq
   filename = basename(fastq)
   dna = readFastq(fastq)
+  if (length(dna) < 1000) {
+    cat('SMALL FASTQ -- override parallel setting -- will run on 1 core\n')
+    parallel=FALSE
+  }
   
   ## blast
   bl <- blast(db=blast_db)
@@ -258,7 +271,7 @@ BLAST_pipeline2 = function(fastq,
   if (parallel == TRUE) {
     require(parallel)
     wpredict = function(x){
-      pr = predict(bl, x@sread, BLAST_args = blast_args)
+      pr = predict(bl, x@sread, BLAST_args = blast_args, type = blast.type)
       # get query IDs
       hits = pr$QueryID %>% as.data.frame() 
       colnames(hits) = 'QueryID'
@@ -273,7 +286,12 @@ BLAST_pipeline2 = function(fastq,
       cltax=cbind(pr,taxlist)
       
       cltax = BLAST_filter(cltax, E.max = E.max, Perc.Ident.min = Perc.Ident.min)
-      return(cltax)
+      lca.tab = lca(cltax)
+      if(is.null(lca.tab)){return(NULL)} 
+     # if(is.null(lca.tab)){return(NULL)}
+      #filter unclassified
+      lca.tab = lca.tab %>% filter(!is.na(phylum))
+      return(lca.tab)
     }
     clus = makeCluster(nclus, type ='FORK');
     splits = clusterSplit(clus, dna)
@@ -310,11 +328,11 @@ BLAST_pipeline2 = function(fastq,
     
     
   } else {
-    cl <- predict(bl, reads, BLAST_args = blast_args)
+    cl <- predict(bl, dna@sread, BLAST_args = blast_args, type = blast.type)
     hits = cl$QueryID %>% as.data.frame() 
     colnames(hits) = 'QueryID'
     hits =  hits %>% separate(QueryID, c("query", "id"), "_")
-    cl$QueryID = hits[,2]
+    cl$QueryID = as.character(hits[,2])
     
     accid = as.character(cl$SubjectID) # accession IDs of BLAST hits
     #takes accession number and gets the taxonomic ID
@@ -323,15 +341,19 @@ BLAST_pipeline2 = function(fastq,
     taxlist=getTaxonomy(ids, taxaNodes, taxaNames)
     cltax=cbind(cl,taxlist)
     cltax = BLAST_filter(cltax, E.max = E.max, Perc.Ident.min = Perc.Ident.min)
+    lca.tab = lca(cltax)
+   # if(is.null(lca.tab)){return(NULL)}
+    #filter unclassified
+    lca.tab = lca.tab %>% filter(!is.na(phylum))
     
     #write hits file
-    keep = dna[unique(as.numeric(cltax$QueryID))]
+    keep = dna[unique(as.numeric(lca.tab$QueryID))]
    
     outfile = paste('blasthits/hits_', filename, sep='')
     if(file.exists(outfile)) { file.remove(outfile) }
     writeFastq(keep, file=outfile)
     
-    return(cltax)
+    return(lca.tab)
   }
 
 }

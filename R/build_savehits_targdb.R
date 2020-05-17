@@ -10,14 +10,16 @@ library(rBLAST)
 library(ggsci)
 
 nclus = 32
-
+#files_in = '~/SURE_data/testz/fastq_out/'
+files_in = 'data'
+res_out = 'targdb_out'
 source('R/core.R')
 
 #download_sra(dir.out = 'data')
 
-files = list.files('data', full.names = TRUE)
+files = list.files(files_in, full.names = TRUE)
 
-if(dir.exists('targdb_out')){} else {dir.create('targdb_out')}
+if(dir.exists(res_out)){} else {dir.create(res_out)}
 
 for (i in 1:length(files)) {
   
@@ -35,8 +37,8 @@ for (i in 1:length(files)) {
   } else {
     amplicon = strsplit(samname, '_')[[1]][4]
   }
-  if (amplicon == 'psbA3') {amplicon='psbA'}
-  if (amplicon == 'rbcLa') {amplicon='rbcL'}
+  if (grepl('psbA', amplicon)) {amplicon='psbA'}
+  if (grepl('rbcL', amplicon)) {amplicon='rbcL'}
   
   print(amplicon)
   
@@ -45,11 +47,12 @@ for (i in 1:length(files)) {
     blast_args =  NULL,
     blast_db = paste('blast_db/', amplicon, '.fasta', sep=''),
     tax_db = '/usr/share/data/taxonomizr/',
-    parallel = TRUE,
+    parallel = T,
     nclus = nclus,
     save.hits = TRUE,
     E.max = 1e-25,
-    Perc.Ident.min = 0
+    Perc.Ident.min = 0,
+    blast.type = 'blastn'
   ) #filter on E value not Perc.Ident
   
   t1.coll = cbind(t1.coll, rep(samname, nrow(t1.coll)))
@@ -57,11 +60,11 @@ for (i in 1:length(files)) {
   if(nrow(t1.coll) == 0){ next }
   
   
-  t1.lca.coll = lca(t1.coll, parallel = T,  nclus = nclus)
-  
+  #t1.lca.coll = lca(t1.coll, parallel = T,  nclus = nclus)
+ # t1.lca.coll = t1.coll
   
   # plot
-  tlca.coll = t1.lca.coll %>%
+  tlca.coll = t1.coll %>%
     group_by(QueryID) %>%
     dplyr::slice(1) %>%
     group_by(last_common) %>%
@@ -70,9 +73,9 @@ for (i in 1:length(files)) {
   
   tlca.coll = cbind(tlca.coll, rep(samname, nrow(tlca.coll)))
   
-  data.table::fwrite(tlca.coll, paste('targdb_out/tlca.coll.', i, '.csv', sep = ''), nThread = 1)
-  data.table::fwrite(t1.lca.coll, paste('targdb_out/t1.lca.coll.', i, '.csv', sep = ''), nThread = 1)
-  data.table::fwrite(t1.coll, paste('targdb_out/t1.coll.', i, '.csv', sep = ''), nThread = 1)
+  data.table::fwrite(tlca.coll, paste(res_out, '/tlca.coll.', i, '.csv', sep = ''), nThread = 1)
+ # data.table::fwrite(t1.lca.coll, paste('targdb_out/t1.lca.coll.', i, '.csv', sep = ''), nThread = 1)
+  data.table::fwrite(t1.coll, paste(res_out, '/t1.coll.', i, '.csv', sep = ''), nThread = 1)
   
   xp = proc.time() - p
   print(paste("Last iteration took:", xp[[3]], sep = ' '))

@@ -4,14 +4,11 @@ library(stringr)
 library(data.table)
 library(pvclust)
 library(vegan)
-
-#t1 = data.table::fread('t1.csv', sep = ',')  #HUGE
-
-#t1.lca = data.table::fread('t1.lca.csv', sep = ',')  #HUGE
-t1.lca.files = list.files('targdb_out/', pattern='t1.lca.coll', full.names = T)
+t1.lca.files = list.files('targdb_out_newguppy/', pattern='t1.coll', full.names = T)
 l <- lapply(t1.lca.files, fread, sep=",")
-t1.lca <- bind_rows(l)
-colnames(t1.lca)[20] = 'samname'
+l2 = lapply(l, function(x) {x$QueryID = as.character(x$QueryID); return(x)}) # fix if QueryID types do not match
+t1.lca <- bind_rows(l2)
+colnames(t1.lca)[21] = 'samname'
 
 
 t1.lca.genus = t1.lca %>%
@@ -23,11 +20,43 @@ t1.lca.genus = t1.lca %>%
   summarise (n = n()) %>%
   group_by(samname) %>%
   mutate(freq = n / sum(n)) %>%
+  arrange(desc(freq))
+
+#NMDS
+cast.gen = reshape2::dcast(t1.lca.genus[,1:3], samname ~ genus)
+cast.gen[is.na(cast.gen)] = 0
+rownames(cast.gen) = cast.gen[,1]
+grp = cast.gen %>% tidyr::separate(samname, c('num', 'site', 'sam', 'amplicon', 'year', 'qual'), sep='[_]') 
+mMDS = metaMDS(cast.gen[,-1], try=1000, k=2, distance = 'bray')
+plot(mMDS, display='sites', type = 'p')
+with(grp, ordihull(mMDS, site, draw='polygon', label=TRUE))
+
+t1.lca.genus.sam = t1.lca.genus %>%
+  mutate(samname = if_else(stringr::str_detect(samname, 'control'), stringr::str_replace(samname, 'control', 'Control_S1'), samname)) %>%
+  tidyr::separate(samname, c('num', 'site', 'sam', 'amplicon', 'year', 'qual'), sep='[_]') %>%
+  tidyr::unite(sample, c('site', 'sam')) %>%
+  group_by(sample,genus) %>%
+  summarize(count = sum(n)) %>%
+  group_by(sample) %>%
+  mutate(freq = count / sum(count)) %>%
   arrange(desc(freq)) %>%
   filter(!is.na(genus))  
 
-#%>%
-# filter(count > 5) 
+cast.gen.sam = reshape2::dcast(t1.lca.genus.sam[,1:3], sample ~ genus)
+cast.gen.sam[is.na(cast.gen.sam)] = 0
+rownames(cast.gen.sam) = cast.gen.sam[,1]
+grouping = cast.gen.sam %>% tidyr::separate(sample, c('site', 'subsam')) %>% select(site, subsam)
+mMDS.sam = metaMDS(cast.gen.sam[,-1], try=1000, k=2, distance = 'bray')
+plot(mMDS.sam, display='sites', type = 'p')
+with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
+
+adonis2(cast.gen.sam[,-1] ~ site, data = grouping)
+
+
+
+
+
+
 
 cast.gen = reshape2::dcast(t1.lca.genus, samname ~ genus)
 cast.gen[is.na(cast.gen)] = 0
@@ -42,6 +71,18 @@ gen.pv <- pvclust(t(cast.gen[,-1]),
 plot(gen.pv, print.num=F, print.pv = T)
 
 
+#try with sample grouping
+
+t1.lca.genus.sam = t1.lca.genus %>%
+  mutate(samname = if_else(stringr::str_detect(samname, 'control'), stringr::str_replace(samname, 'control', 'Control_S1'), samname)) %>%
+  tidyr::separate(samname, c('num', 'site', 'sam', 'amplicon', 'year', 'qual'), sep='[_]') %>%
+  tidyr::unite(sample, c('site', 'sam')) %>%
+  group_by(sample,genus) %>%
+  summarize(count = sum(n)) %>%
+  group_by(sample) %>%
+  mutate(freq = count / sum(count)) %>%
+  arrange(desc(freq)) %>%
+  filter(!is.na(genus))  
 
 # 
 # # cluster on last_common
@@ -86,7 +127,8 @@ ggplot(data = t1.lca.genus %>% filter(freq>0.1)) +
 
 #need to deal with control sample parsing
 t1.lca.genus.sam = t1.lca.genus %>%
-  tidyr::separate(samname, c('num', 'site', 'sam', 'amplicon', 'year', 'qual')) %>%
+  mutate(samname = if_else(stringr::str_detect(samname, 'control'), stringr::str_replace(samname, 'control', 'control_S1'), samname)) %>%
+  tidyr::separate(samname, c('num', 'site', 'sam', 'amplicon', 'year', 'qual'), sep='[_]') %>%
   tidyr::unite(sample, c('site', 'sam')) %>%
   group_by(sample,genus) %>%
   summarize(count = sum(n)) %>%
@@ -110,10 +152,11 @@ cast.gen.sam[is.na(cast.gen.sam)] = 0
 rownames(cast.gen.sam) = cast.gen.sam[,1]
 gen.dist <- vegdist(decostand(cast.gen.sam[,-1], method='normalize'), diag=T, method='jaccard')
 plot(hclust(gen.dist))
+
 #gen.pv <- pvclust(t(decostand(cast.gen.sam[,-1], method='log')), 
 #                method.hclust="ward", nboot=100, parallel=T)
-gen.pv <- pvclust(t(cast.gen.sam[,-1]), 
-                  method.hclust="ward", nboot=100, parallel=T)
+gen.pv <- pvclust(t(decostand(cast.gen.sam[,-1], method='normalize')), 
+                  method.hclust="ward.D2", nboot=100, parallel=T)
 
 plot(gen.pv, print.num=F, print.pv = T)
 
