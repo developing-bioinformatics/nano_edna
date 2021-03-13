@@ -10,7 +10,7 @@ library(rBLAST)
 library(ggsci)
 
 nclus = 32
-#files_in = '~/SURE_data/testz/fastq_out/'
+taxonomizr_path = '/usr/share/data/taxonomizr/'
 files_in = 'data'
 res_out = 'targdb_out'
 source('R/core.R')
@@ -44,13 +44,13 @@ for (i in 1:length(files)) {
   
   t1.coll = BLAST_pipeline2(
     files[i],
-    blast_args =  NULL,
+    blast_args =  '-max_target_seqs 10000',
     blast_db = paste('blast_db/', amplicon, '.fasta', sep=''),
-    tax_db = '/usr/share/data/taxonomizr/',
+    tax_db = taxonomizr_path,
     parallel = T,
     nclus = nclus,
     save.hits = TRUE,
-    E.max = 1e-25,
+    E.max = 1e-50,
     Perc.Ident.min = 0,
     blast.type = 'blastn'
   ) #filter on E value not Perc.Ident

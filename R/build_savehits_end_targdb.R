@@ -4,7 +4,7 @@ library(stringr)
 library(data.table)
 library(pvclust)
 library(vegan)
-t1.lca.files = list.files('targdb_out_newguppy/', pattern='t1.coll', full.names = T)
+t1.lca.files = list.files('targdb_out/', pattern='t1.coll', full.names = T)
 l <- lapply(t1.lca.files, fread, sep=",")
 l2 = lapply(l, function(x) {x$QueryID = as.character(x$QueryID); return(x)}) # fix if QueryID types do not match
 t1.lca <- bind_rows(l2)
