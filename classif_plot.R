@@ -130,18 +130,17 @@ raw_readcount
 classif_readcount = ggplot(data = hit_fq_data) +
   geom_col(aes(x=site_sam, y = raw_reads, fill=amplicon)) +
   theme_linedraw() +
+  scale_fill_brewer(palette = 'Paired') +
   theme(legend.position = 'none',
         axis.text.y = element_text(angle=45),
         axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank()) +
   ylim(0,200000) +
-  ylab('Classified Reads') + 
-  scale_fill_brewer(palette = 'Paired')
+  ylab('Classified Reads') 
 classif_readcount
 
-final = raw_readcount + classif_readcount + tileplot + plot_layout(ncol = 1, heights = c(1, 1, 3))
-
+final = raw_readcount + classif_readcount + tileplot + plot_layout(ncol = 1, heights = c(1, 1, 3)) 
 ggsave('figures/figure2A.png', final, height = 9, width=4)
 
 source('R/kraken_savehits_end_targdb.R')
@@ -157,10 +156,12 @@ fig2_all = raw_readcount +
   kclassif_readcount + 
   tileplot + 
   ktileplot + 
-  plot_layout(design=design, heights=c(1,1,3))
+  plot_layout(design=design, heights=c(1,1,3)) + 
+  plot_annotation(tag_levels = 'A')
+
 fig2_all
 
-ggsave('figures/figure2_all.png',fig2_all, height=14, width=7)
+ggsave('figures/figure2_all.png',fig2_all, height=14, width=7, dpi = 600)
 
 
 
@@ -169,7 +170,7 @@ ggsave('figures/figure2_all.png',fig2_all, height=14, width=7)
 cast.gen.sam = reshape2::dcast(t1.lca.genus.bysite %>% select(site_sam, genus, bysite_freq), site_sam ~ genus)
 cast.gen.sam[is.na(cast.gen.sam)] = 0
 rownames(cast.gen.sam) = cast.gen.sam[,1]
-grouping = cast.gen.sam %>% tidyr::separate(sample, c('site', 'subsam')) %>% select(site, subsam)
+grouping = cast.gen.sam %>% tidyr::separate(site_sam, c('site', 'subsam')) %>% select(site, subsam)
 mMDS.sam = metaMDS(cast.gen.sam[,-1], try=10000, k=3, distance = 'bray')
 
 #Figure 3

@@ -8,6 +8,8 @@ library(vegan)
 library(seqTools)
 library(dendextend)
 library(ggdendro)
+library(RColorBrewer)
+
 
 krep.files = list.files('kraken_rep', full.names = T)
 l <- lapply(krep.files, data.table::fread)
@@ -130,12 +132,14 @@ khits_fq_data = khits_fq_data %>%
 #   tidyr::separate(samname, c("samnum", "site", "sam_id", "amplicon", "replicate", "year", "minq"), sep = "_") %>%
 #   tidyr::unite(site_sam, c("site", "sam_id"))
 #   
+pal = brewer.pal(name='Paired', n = 12)
+
 ktileplot = ggplot(data = kproc.sample ) +
   geom_tile(aes(x=sample, y = V6, fill=freq)) +
   theme_linedraw() +
   theme(legend.position = 'right',
         axis.text.y = element_text(angle=45),
-        axis.text.x = element_text(angle=45, vjust =1, hjust = 1)) + 
+        axis.text.x = element_text(angle=45, vjust =1, hjust = 1)) +
   scale_fill_steps(low=pal[1], high=pal[2], n.breaks = 10) +
   xlab('') + ylab('')
 

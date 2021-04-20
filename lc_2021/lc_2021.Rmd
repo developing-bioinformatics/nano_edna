@@ -78,12 +78,13 @@ Sequence analysis reveals highly local differences in plant diversity including 
 
 The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications of amplicon metabarcoding.
 
-```{r classifig, out.width='100%', fig.align='center', fig.cap='eDNA Classification Results', fig.height=12}
+```{r classifig, fig.align='center', fig.cap='eDNA Classification Results', out.width='100%', fig.height=14}
 #knitr::include_graphics('../figures/figure2_all.png')
 suppressMessages(require(imager))
 image_filename='../figures/figure2_all.png'
 image <- load.image(image_filename)
-plot(image, axes=F)
+par(bg = '#333333')
+plot(image, axes=F, bg='transparent', rescale=F)
 ```
 
 ```{r ordifig, out.width='100%', echo=FALSE, fig.cap='BLAST ordination plot', fig.height=8}
@@ -106,6 +107,8 @@ plot(image2, axes=F)
 # Resources
 
 + [Code Repository](https://github.com/developing-bioinformatics/eDNA_BLAST)
++ [NCBI BioProject]()
++ [Live Version of this Poster *check here for updates*]()
 
 ```{r, include=FALSE}
 knitr::write_bib(c('knitr','rmarkdown','posterdown','pagedown'), 'packages.bib')
