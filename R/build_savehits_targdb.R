@@ -1,4 +1,5 @@
-# test core functions
+# run core pipeline for eDNA amplicon data at PRJNA605442
+
 library(Biostrings)
 library(taxonomizr)
 library(ggplot2)
@@ -11,11 +12,11 @@ library(ggsci)
 
 nclus = 32
 taxonomizr_path = '/usr/share/data/taxonomizr/'
-files_in = 'data'
-res_out = 'targdb_out'
+files_in = 'data_all'
+res_out = 'targdb_allout'
 source('R/core.R')
 
-#download_sra(dir.out = 'data')
+download_sra(proj = 'PRJNA605442', dir.out = files_in)
 
 files = list.files(files_in, full.names = TRUE)
 

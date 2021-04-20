@@ -12,12 +12,14 @@ affiliation:
 column_numbers: 3
 logoright_name: https&#58;//www.logolynx.com/images/logolynx/36/36c6948e4b3a8d4237427359aa4f04e1.jpeg
 logoleft_name: https&#58;//www.artstor.org/wp-content/uploads/2013/12/logo_amnh-768x384.jpg
-primary_colour: "#000000"
-secondary_colour: "#000000"
-author_textcol: "darkorchid"
-accent_colour: "darkorchid"
-body_bgcol: "#000000"
-body_textcol: "#FFFFFF"
+primary_colour: "#333333"
+secondary_colour: "white"
+author_textcol: "steelblue"
+accent_colour: "steelblue"
+body_bgcol: "#333333"
+body_textcol: "white"
+sectitle_textcol: "white"
+sectitle_bgcol: "steelblue"
 output: 
   posterdown::posterdown_html:
     self_contained: false
@@ -28,35 +30,53 @@ bibliography: packages.bib
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-# Abstract
 
-*Premise of the study* – Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.
+# *Premise of the study* 
 
-*Methods* – We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from psbA3, rbcLa, ITS2, 18S, trnL genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells.  Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy.
+Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.
 
-*Results* – Sequence analysis reveals highly local differences in plant diversity including both aquatic and terrestrial plant taxa. 
+# *Methods* 
 
-*Discussion* – The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications of amplicon metabarcoding.
+We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from psbA3, rbcLa, ITS2, 18S, trnL genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells.  Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy. Figure \@ref(fig:flowfig)
 
+The full protocol is available [dx.doi.org/10.17504/protocols.io.bc4wiyxe](https://dx.doi.org/10.17504/protocols.io.bc4wiyxe)
 
+```{R flowfig, out.width='80%', fig.align='center', fig.cap='General Methodological Workflow', fig.height=12}
+library(DiagrammeR)
+grViz("digraph flowchart {
+      # node definitions with substituted label text
+      bgcolor='#333333'
+      node [fontname = Helvetica, 
+            shape = rectangle,  
+            style = filled
+            fillcolor=white]        
+      tab1 [label = '@@1']
+      tab2 [label = '@@2']
+      tab3 [label = '@@3']
+      tab4 [label = '@@4']
+      tab5 [label = '@@5']
+      tab6 [label = '@@6']
 
-even citations like this one [@R-rmarkdown]. The rest of this example poster will show how you can insert typical conference poster features into your own document. 
+      # edge definitions with the node IDs
+      tab1 -> tab2 -> tab3 -> tab4 -> tab5 -> tab6;
+      }
 
-## Objectives
-
-
-# Methods
-
-
-# Results
-
-You can reference tables like so: Table \@ref(tab:mytable). 
-
-```{r mytable, out.width='80%'}
-knitr::kable(iris[1:10, 1:4], caption = 'Table caption.',align = 'c',"html")
+      [1]: 'Field water filtration'
+      [2]: 'DNA Extraction'
+      [3]: 'PCR Target Amplification and Barcoding'
+      [4]: 'Pooled Sequencing with Flongle on MinION'
+      [5]: 'Basecalling with Guppy'
+      [6]: 'Taxonomic classification'
+      " )
 ```
 
-Or with figures: Figure \@ref(fig:classifig), or Figure \@ref(fig:ordifig).
+# *Results* 
+
+Sequence analysis reveals highly local differences in plant diversity including both aquatic and terrestrial plant taxa Figure \@ref(fig:classifig) and Figure \@ref(fig:ordifig). 
+
+# *Discussion*
+
+The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications of amplicon metabarcoding.
 
 ```{r classifig, out.width='100%', fig.align='center', fig.cap='eDNA Classification Results', fig.height=12}
 #knitr::include_graphics('../figures/figure2_all.png')
@@ -66,7 +86,7 @@ image <- load.image(image_filename)
 plot(image, axes=F)
 ```
 
-```{r ordifig, out.width='100%', echo=FALSE, fig.cap='BLAST ordination plot', fig.height=5}
+```{r ordifig, out.width='100%', echo=FALSE, fig.cap='BLAST ordination plot', fig.height=8}
 suppressMessages(require(imager))
 ordiplot1='../figures/ordiplot.png'
 ordiplot2='../figures/kraken_ordiplot.png'
@@ -74,17 +94,20 @@ ordiplot2='../figures/kraken_ordiplot.png'
 image1 <- load.image(ordiplot1)
 image2 <- load.image(ordiplot2)
 
+par(mfrow=c(2,1))
 plot(image1, axes=F)
+plot(image2, axes=F)
 
 ```
 
 # Next Steps
 
 
-# Conclusion
+# Resources
+
++ [Code Repository](https://github.com/developing-bioinformatics/eDNA_BLAST)
 
 ```{r, include=FALSE}
 knitr::write_bib(c('knitr','rmarkdown','posterdown','pagedown'), 'packages.bib')
 ```
 
-# References

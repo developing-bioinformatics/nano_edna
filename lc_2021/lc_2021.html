@@ -23,6 +23,10 @@ Google fonts api stuff
 
 <script src="lc_2021_files/header-attrs-2.7/header-attrs.js"></script>
 <script src="lc_2021_files/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="lc_2021_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="lc_2021_files/viz-1.8.2/viz.js"></script>
+<link href="lc_2021_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="lc_2021_files/grViz-binding-1.0.6.1/grViz.js"></script>
 
 
 
@@ -51,15 +55,15 @@ padding: 0cm;
 width: 100%;
 height: 15%;
 overflow: hidden;
-background-color: #000000;
-border: 0 solid #000000
+background-color: #333333;
+border: 0 solid #333333
 ;
 }
 .logo_left {
 float: left;
 width: 10%;
 height: 100%;
-background-color: #000000;
+background-color: #333333;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -68,7 +72,7 @@ justify-content: center;
 float: right;
 width: 10%;
 height: 100%;
-background-color: #000000;
+background-color: #333333;
 display: flex;
 align-items: center;
 justify-content: center;
@@ -89,7 +93,7 @@ font-family: Palatino;
 }
 /* unvisited link */
 a:link {
-color: darkorchid;
+color: steelblue;
 text-decoration: none;
 }
 .mybreak {
@@ -97,19 +101,19 @@ text-decoration: none;
 }
 /* visited link */
 a:visited {
-color: darkorchid;
+color: steelblue;
 text-decoration: none;
 }
 
 /* mouse over link */
 a:hover {
-color: darkorchid;
+color: steelblue;
 text-decoration: none;
 }
 
 /* selected link */
 a:active {
-color: darkorchid;
+color: steelblue;
 text-decoration: none;
 }
 .poster_body {
@@ -125,15 +129,15 @@ column-rule-width: 1mm;
 -webkit-column-rule-style: dashed;
 -moz-column-rule-style: dashed;
 column-rule-style: dashed;
--webkit-column-rule-color: #000000;
--moz-column-rule-color: #000000;
-column-rule-color: #000000;
+-webkit-column-rule-color: #333333;
+-moz-column-rule-color: #333333;
+column-rule-color: #333333;
 column-gap: 1em;
 padding-left: 0.5em;
 padding-right: 0.5em;
 height: 100%;
-color: #FFFFFF
-background-color: #000000;
+color: white
+background-color: #333333;
 }
 .poster_title h1 {
 font-size: 75pt;
@@ -146,10 +150,10 @@ width: 45in;
 height: calc(100% - 17%);
 padding-top: calc(38in * 0.01);
 padding-bottom: calc(38in * 0.01);
-background-color: #000000;
+background-color: #333333;
 }
 .poster_title h3 {
-color: darkorchid;
+color: steelblue;
 font-size: 50pt;
 margin: 0;
 border: 0;
@@ -175,10 +179,10 @@ margin-bottom: 0;
 }
 .poster_body h1 {
 text-align: center;
-color: #FFFFFF;
+color: white;
 font-size: 65pt;
-border: 2mm solid #000000;
-background-color: #000000;
+border: 2mm solid #333333;
+background-color: steelblue;
 border-radius: 4mm 0mm;
 margin-top: 2mm;
 margin-bottom: 2mm;
@@ -207,7 +211,7 @@ width: 100%;
 }
 pre.sourceCode.r, pre.sourceCode.python {
 background-color: #ffffff20;
-border: solid #000000 1mm;
+border: solid white 1mm;
 border-radius: 0.5em;
 padding: 4mm;
 margin: auto;
@@ -229,8 +233,8 @@ border-radius: 2mm;
 code {
 font-size: 25pt;
 font-family: monospace;
-background-color: #00000024;
-color: #000000;
+background-color: white24;
+color: white;
 padding: 1.2mm;
 line-height: 1;
 border-radius: 2mm;
@@ -246,8 +250,8 @@ padding-bottom: 3mm;
 code {
 font-size: 1em;
 font-family: monospace;
-background-color: #00000024;
-color: #000000;
+background-color: white24;
+color: #333333;
 padding: 1.2mm;
 border-radius: 2mm;
 }
@@ -277,7 +281,7 @@ margin-right: 4mm;
 margin-left: 4mm;
 margin-top: 6mm;
 margin-bottom: 10mm;
-color: #FFFFFF
+color: white
 }
 .poster_body ol {
 margin-right: 4mm;
@@ -318,213 +322,50 @@ font-size: 20pt;
 
 <div class='poster_body_wrap'>
 <div class='poster_body'>
-<div id="abstract" class="section level1">
-<h1>Abstract</h1>
-<p><em>Premise of the study</em> – Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.</p>
-<p><em>Methods</em> – We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from psbA3, rbcLa, ITS2, 18S, trnL genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells. Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy.</p>
-<p><em>Results</em> – Sequence analysis reveals highly local differences in plant diversity including both aquatic and terrestrial plant taxa.</p>
-<p><em>Discussion</em> – The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications of amplicon metabarcoding.</p>
-<p>even citations like this one <span class="citation">(Allaire et al. 2021)</span>. The rest of this example poster will show how you can insert typical conference poster features into your own document.</p>
-<div id="objectives" class="section level2">
-<h2>Objectives</h2>
-</div>
+<div id="premise-of-the-study" class="section level1">
+<h1><em>Premise of the study</em></h1>
+<p>Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.</p>
 </div>
 <div id="methods" class="section level1">
-<h1>Methods</h1>
+<h1><em>Methods</em></h1>
+<p>We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from psbA3, rbcLa, ITS2, 18S, trnL genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells. Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy. Figure <a href="#fig:flowfig">1</a></p>
+<p>The full protocol is available <a href="https://dx.doi.org/10.17504/protocols.io.bc4wiyxe">dx.doi.org/10.17504/protocols.io.bc4wiyxe</a></p>
+<div class="figure" style="text-align: center"><span id="fig:flowfig"></span>
+<div id="htmlwidget-0a92986163061cd316f9" style="width:80%;height:1152px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-0a92986163061cd316f9">{"x":{"diagram":"digraph flowchart {\n      # node definitions with substituted label text\n      bgcolor=\"#333333\"\n      node [fontname = Helvetica, \n            shape = rectangle,  \n            style = filled\n            fillcolor=white]        \n      tab1 [label = \"Field water filtration\"]\n      tab2 [label = \"DNA Extraction\"]\n      tab3 [label = \"PCR Target Amplification and Barcoding\"]\n      tab4 [label = \"Pooled Sequencing with Flongle on MinION\"]\n      tab5 [label = \"Basecalling with Guppy\"]\n      tab6 [label = \"Taxonomic classification\"]\n\n      # edge definitions with the node IDs\n      tab1 -> tab2 -> tab3 -> tab4 -> tab5 -> tab6;\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p class="caption">
+Figure 1: General Methodological Workflow
+</p>
+</div>
 </div>
 <div id="results" class="section level1">
-<h1>Results</h1>
-<p>You can reference tables like so: Table <a href="#tab:mytable">1</a>.</p>
-<table>
-<caption>
-<span id="tab:mytable">Table 1: </span>Table caption.
-</caption>
-<thead>
-<tr>
-<th style="text-align:center;">
-Sepal.Length
-</th>
-<th style="text-align:center;">
-Sepal.Width
-</th>
-<th style="text-align:center;">
-Petal.Length
-</th>
-<th style="text-align:center;">
-Petal.Width
-</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:center;">
-5.1
-</td>
-<td style="text-align:center;">
-3.5
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.9
-</td>
-<td style="text-align:center;">
-3.0
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.7
-</td>
-<td style="text-align:center;">
-3.2
-</td>
-<td style="text-align:center;">
-1.3
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.6
-</td>
-<td style="text-align:center;">
-3.1
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.0
-</td>
-<td style="text-align:center;">
-3.6
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.4
-</td>
-<td style="text-align:center;">
-3.9
-</td>
-<td style="text-align:center;">
-1.7
-</td>
-<td style="text-align:center;">
-0.4
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.6
-</td>
-<td style="text-align:center;">
-3.4
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.3
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-5.0
-</td>
-<td style="text-align:center;">
-3.4
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.4
-</td>
-<td style="text-align:center;">
-2.9
-</td>
-<td style="text-align:center;">
-1.4
-</td>
-<td style="text-align:center;">
-0.2
-</td>
-</tr>
-<tr>
-<td style="text-align:center;">
-4.9
-</td>
-<td style="text-align:center;">
-3.1
-</td>
-<td style="text-align:center;">
-1.5
-</td>
-<td style="text-align:center;">
-0.1
-</td>
-</tr>
-</tbody>
-</table>
-<p>Or with figures: Figure <a href="#fig:classifig">1</a>, or Figure <a href="#fig:ordifig">2</a>.</p>
+<h1><em>Results</em></h1>
+<p>Sequence analysis reveals highly local differences in plant diversity including both aquatic and terrestrial plant taxa Figure <a href="#fig:classifig">2</a> and Figure <a href="#fig:ordifig">3</a>.</p>
+</div>
+<div id="discussion" class="section level1">
+<h1><em>Discussion</em></h1>
+<p>The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications of amplicon metabarcoding.</p>
 <div class="figure" style="text-align: center"><span id="fig:classifig"></span>
 <img src="lc_2021_files/figure-html/classifig-1.png" alt="eDNA Classification Results" width="100%" />
 <p class="caption">
-Figure 1: eDNA Classification Results
+Figure 2: eDNA Classification Results
 </p>
 </div>
 <div class="figure"><span id="fig:ordifig"></span>
 <img src="lc_2021_files/figure-html/ordifig-1.png" alt="BLAST ordination plot" width="100%" />
 <p class="caption">
-Figure 2: BLAST ordination plot
+Figure 3: BLAST ordination plot
 </p>
 </div>
 </div>
 <div id="next-steps" class="section level1">
 <h1>Next Steps</h1>
 </div>
-<div id="conclusion" class="section level1">
-<h1>Conclusion</h1>
-</div>
-<div id="references" class="section level1 unnumbered">
-<h1>References</h1>
-<div id="refs" class="references hanging-indent">
-<div id="ref-R-rmarkdown">
-<p>Allaire, JJ, Yihui Xie, Jonathan McPherson, Javier Luraschi, Kevin Ushey, Aron Atkins, Hadley Wickham, Joe Cheng, Winston Chang, and Richard Iannone. 2021. <em>Rmarkdown: Dynamic Documents for R</em>. <a href="https://CRAN.R-project.org/package=rmarkdown">https://CRAN.R-project.org/package=rmarkdown</a>.</p>
-</div>
-</div>
+<div id="resources" class="section level1">
+<h1>Resources</h1>
+<ul>
+<li><a href="https://github.com/developing-bioinformatics/eDNA_BLAST">Code Repository</a></li>
+</ul>
 </div>
 </div>
 </div>

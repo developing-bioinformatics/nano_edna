@@ -8,7 +8,7 @@ download_sra = function(proj="PRJNA605442",
                         SRR = NULL, 
                         amplicon = NULL, 
                         sample = NULL, 
-                        retmax=60, ... ){
+                        retmax=100, ... ){
   # always search on project ID
   # sometimes search on sample name (Control, Swamp, Pond)
   # sometimes search on amplicon
@@ -74,7 +74,7 @@ download_sra = function(proj="PRJNA605442",
     } 
   } else {
     get_list = grepl('fastq', SRAFile)
-    targ_url = url[get_list]
+    targ_url = url[!get_list]
     file = filename[get_list]
     for(g in 1:length(targ_url)){
       download.file(targ_url[g], paste(dir.out, file[g], sep='/'), method = 'wget')
