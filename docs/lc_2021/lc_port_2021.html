@@ -8,14 +8,10 @@
 
 
 
-<title>Monitoring plant biodiversity in aquatic eDNA with low-cost Nanopore Flongle sequencing</title>
+<title>Aquatic Plant eDNA with Nanopore</title>
 
 <script src="lc_port_2021_files/header-attrs-2.7/header-attrs.js"></script>
 <script src="lc_port_2021_files/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="lc_port_2021_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<script src="lc_port_2021_files/viz-1.8.2/viz.js"></script>
-<link href="lc_port_2021_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="lc_port_2021_files/grViz-binding-1.0.6.1/grViz.js"></script>
 
 
 
@@ -66,7 +62,7 @@ width: 100%;
 }
 pre.sourceCode.r, pre.sourceCode.python {
 background-color: #ffffff20;
-border: solid white 1mm;
+border: solid #008080 1mm;
 border-radius: 0.5em;
 padding: 4mm;
 margin: auto;
@@ -88,8 +84,8 @@ border-radius: 2mm;
 code {
 font-size: 25pt;
 font-family: monospace;
-background-color: white24;
-color: white;
+background-color: #00808024;
+color: #008080;
 padding: 1.2mm;
 line-height: 1;
 border-radius: 2mm;
@@ -101,7 +97,7 @@ font-style: italic;
 }
 
 tbody tr:nth-child(odd) {
-    background-color: white20;
+    background-color: #00808020;
 }
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
   border-spacing: 0;
@@ -136,7 +132,7 @@ padding: 0px;
 }
 .outer {
 width: 33.1in;
-height: calc(46.8in *  (1 - 0.2 - 0.2 - 0.01) );
+height: calc(46.8in *  (1 - 0.2 - 0.1 - 0.01) );
 -webkit-column-count: 3; /* Chrome, Safari, Opera */
 -moz-column-count: 3; /* Firefox */
 column-count: 3;
@@ -155,19 +151,19 @@ column-rule-style: none;
 -webkit-column-rule-color: black;
 -moz-column-rule-color: black;
 column-rule-color: black;
-background-color: #333333;
+background-color: #ffffff;
 font-family: Rasa;
 margin-top: calc(46.8in *  0.2 );
 padding-top: 1em;
 padding-bottom: 1em;
 }
 span.citation {
-  color: white;
+  color: #008080;
   font-weight: bold;
 }
 a {
 text-decoration: none;
-color: white;
+color: #008080;
 }
 #title {
 font-size: 125pt;
@@ -179,7 +175,7 @@ font-weight: normal;
 background: 0;
 }
 #author {
-color:steelblue;
+color:#0b4545;
 margin: 0;
 line-height: 85%;
 font-size: 1.17em;
@@ -192,7 +188,7 @@ font-size: 25px;
 margin: 0;
 }
 sup {
-color: steelblue;
+color: #cc0000;
 }
 .affiliation sup {
 font-size: 20px;
@@ -204,7 +200,7 @@ text-align: left;
 font-size: 30px;
 }
 .author_extra {
-color: white;
+color: #008080;
 margin: 0;
 line-height: 85%;
 font-size: 35px;
@@ -221,17 +217,17 @@ font-weight: bold;
   background:
     linear-gradient(
       to left,
-      #333333 1%,
-      #333333 20%,
-      #33333375 33%,
-      #333333 50%,
-      #33333375 66%,
-      #333333 80%,
-      #333333 99%
+      #ffffff 1%,
+      #ffffff 20%,
+      #0b454575 33%,
+      #0b4545 50%,
+      #0b454575 66%,
+      #ffffff 80%,
+      #ffffff 99%
     )
     left
     bottom
-    #333333
+    #ffffff
     no-repeat;
   background-size:100% 5px ;
   margin-top: 0.5em;
@@ -241,7 +237,7 @@ font-weight: bold;
 text-align: center;
 }
 .outer p, .level2 {
-color: white;
+color: #000000;
 }
 .outer ol {
 padding-left: 8%;
@@ -252,10 +248,10 @@ text-align: left;
 width: 33.1in;
 height: calc(46.8in * 0.2);
 position: absolute;
-background-color: #333333;
+background-color: #0b4545;
 color: #ffffff90;
 font-family: Rasa;
-background-image: linear-gradient(#333333 50%,white);
+background-image: linear-gradient(#0b4545 50%,#008080);
 }
 .main strong {
 color: #ffffff;
@@ -331,11 +327,11 @@ padding: 0cm;
 }
 .main_bottom {
 width: 33.1in;
-height: calc(46.8in * 0.2);
-margin-top: calc(46.8in * (1 - 0.2));
+height: calc(46.8in * 0.1);
+margin-top: calc(46.8in * (1 - 0.1));
 position: absolute;
-background-color: #333333;
-background-image: linear-gradient(white 10%, #333333);
+background-color: #0b4545;
+background-image: linear-gradient(#008080 10%, #0b4545);
 }
 .section {
   padding-left: 10mm;
@@ -386,10 +382,10 @@ span > #tab:mytable {
 
 <div class="column outer">
 <div class="section">
-<h1 id="title">Monitoring plant biodiversity in aquatic eDNA with low-cost Nanopore Flongle sequencing</h1><br>
+<h1 id="title">Aquatic Plant eDNA with Nanopore</h1><br>
 <h3 id="author" class="author">
 
-Rob Harbert<sup> 1 2, <a class="orcid" href="https://orcid.org/0000-0002-1714-5033"><img src="https://raw.githubusercontent.com/brentthorne/posterdown/master/images/orcid.jpg"></a></sup><br>
+Rob Harbert<sup> 1, 2, <a class="orcid" href="https://orcid.org/0000-0002-1714-5033"><img src="https://raw.githubusercontent.com/brentthorne/posterdown/master/images/orcid.jpg"></a></sup><br>
 <a class="twitter" href="https://mobile.twitter.com/robharbert"><i class="fab fa-twitter"></i>&nbsp;&nbsp;@robharbert</a><br>
 
 <a class='envelope'><i class="fas fa-envelope"></i></a> <a href="mailto:rharbert@stonehill.edu" class="email">rharbert@stonehill.edu</a> <br>
@@ -404,41 +400,128 @@ Rob Harbert<sup> 1 2, <a class="orcid" href="https://orcid.org/0000-0002-1714-50
 </p>
 </div>
 
+<style>
+p.caption {
+ margin-top: 0;
+ margin-bottom: 0;
+}
+</style>
 <div id="premise-of-the-study" class="section level1">
 <h1><em>Premise of the study</em></h1>
 <p>Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.</p>
 </div>
 <div id="methods" class="section level1">
 <h1><em>Methods</em></h1>
-<p>We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from <em>psbA3</em>, <em>rbcLa</em>, <em>ITS2</em>, <em>18S</em>, <em>trnL</em> genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells. Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy. Figure <a href="#fig:flowfig">1</a></p>
-<p>The full protocol is available <a href="https://dx.doi.org/10.17504/protocols.io.bc4wiyxe">dx.doi.org/10.17504/protocols.io.bc4wiyxe</a></p>
-<div class="figure" style="text-align: center"><span id="fig:flowfig"></span>
-<div id="htmlwidget-dd2200417eecb26cb4ae" style="width:80%;height:1500px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-dd2200417eecb26cb4ae">{"x":{"diagram":"digraph flowchart {\n      # node definitions with substituted label text\n      bgcolor=\"#333333\"\n      node [fontname = Helvetica, \n            shape = rectangle,  \n            style = filled\n            fillcolor=white]        \n      tab1 [label = \"Field water filtration with 0.045 μm \"]\n      tab2 [label = \"DNA Extraction with DNEasy PowerWater Kit\"]\n      tab3 [label = \"PCR Target Amplification and Multiplex Barcoding\"]\n      tab4 [label = \"Pooled Sequencing with Flongle flowcells on MinION sequencer\"]\n      tab5 [label = \"Basecalling with Guppy\"]\n      tab6 [label = \"Taxonomic classification with BLAST + LCA and Kraken2\"]\n\n      # edge definitions with the node IDs\n      tab1 -> tab2 -> tab3 -> tab4 -> tab5 -> tab6;\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
-<p class="caption">
-Figure 1: General Methodological Workflow
-</p>
-</div>
+<p>We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from <em>psbA3</em>, <em>rbcLa</em>, <em>ITS2</em>, <em>18S</em>, <em>trnL</em> genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells. Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy. Table <a href="#tab:flowtable">1</a>.</p>
+<table>
+<caption>
+<span id="tab:flowtable">Table 1: </span>General Workflow
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Step
+</th>
+<th style="text-align:left;">
+Description
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Sample Collection
+</td>
+<td style="text-align:left;">
+Field water filtration with 0.045 μm pore filter
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+DNA Extraction
+</td>
+<td style="text-align:left;">
+DNA Extraction with DNEasy PowerWater Kit
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Target Amplification
+</td>
+<td style="text-align:left;">
+PCR Target Amplification and 12x Multiplex Barcoding
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sequencing
+</td>
+<td style="text-align:left;">
+PCR Barcoding kit (SQK-PBK004) library preparation
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Equimolar Pooled Sequencing
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Flongle R9.4.1 flowcells on MinION sequencer
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Bioinformatics
+</td>
+<td style="text-align:left;">
+Basecalling with Guppy 3.4.5 + high accuracy ‘flip-flop’ model
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+Kraken2 classification
+</td>
+</tr>
+</tbody>
+</table>
+<p>The full protocol is available here: <a href="https://dx.doi.org/10.17504/protocols.io.bc4wiyxe">dx.doi.org/10.17504/protocols.io.bc4wiyxe</a></p>
 <div class="figure" style="text-align: center"><span id="fig:classifig"></span>
 <img src="lc_port_2021_files/figure-html/classifig-1.png" alt="eDNA Classification Results" width="100%" />
 <p class="caption">
-Figure 2: eDNA Classification Results
+Figure 1: eDNA Classification Results
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:ordifig"></span>
 <img src="lc_port_2021_files/figure-html/ordifig-1.png" alt="Ordination plots" width="100%" />
 <p class="caption">
-Figure 3: Ordination plots
+Figure 2: Ordination plots
 </p>
 </div>
 </div>
 <div id="results" class="section level1">
 <h1><em>Results</em></h1>
-<p>Sequence analysis reveals highly local differences in plant diversity including both aquatic and terrestrial plant taxa Figure <a href="#fig:classifig">2</a> and Figure <a href="#fig:ordifig">3</a>.</p>
+<p>Sequence analysis reveals highly local differences in plant diversity including both aquatic and terrestrial plant taxa Figure <a href="#fig:classifig">1</a> and Figure <a href="#fig:ordifig">2</a>.</p>
 <p>The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications of amplicon metabarcoding.</p>
 </div>
+<div id="next-steps" class="section level1">
+<h1><em>Next Steps</em></h1>
+<ul>
+<li>Experiment with primer pools (increase multiplexing)</li>
+<li>Exchange rapid for ligation chemistry in library prep</li>
+<li>Pipeline publication: <a href="https://github.com/developing-bioinformatics/nano_edna" class="uri">https://github.com/developing-bioinformatics/nano_edna</a></li>
+<li>Bonito Basecalling -&gt; Higher single molecule accuracy will improve taxonomic classification</li>
+<li>Expand to 96 barcodes and MinION flowcells</li>
+</ul>
+</div>
 <div id="resources" class="section level1">
-<h1>Resources</h1>
+<h1><em>Resources</em></h1>
 <ul>
 <li><a href="https://github.com/developing-bioinformatics/eDNA_BLAST">Code Repository</a></li>
 <li><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA488629">NCBI BioProject: PRJNA488629</a></li>
@@ -448,7 +531,7 @@ Figure 3: Ordination plots
 
 </div>
 <div class="main">
-<p>Low-cost, portable sequencing enables experimental environmental DNA monitoring.</p>
+<p>Monitoring plant biodiversity in aquatic environmental DNA with low-cost Nanopore Flongle sequencing.</p>
 </div>
 <div class="main_bottom">
 <img id="main-img-left" src=https://www.artstor.org/wp-content/uploads/2013/12/logo_amnh-768x384.jpg>

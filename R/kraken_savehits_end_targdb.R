@@ -99,19 +99,19 @@ kraken_ordiplot = ggplot() +
  
 
 
-#Figure 3
-png(filename = 'figures/kraken_ordiplot.png', height=4, units='in', res=600)
-plot(krakenmMDS.sam, display='sites', type = 't')
-with(grouping, ordiellipse(krakenmMDS.sam, site, draw='polygon', label=TRUE))
-dev.off()
-
-pdf('figures/kraken_ordiplot.pdf', height=4, units='in', res=600)
-plot(krakenmMDS.sam, display='sites', type = 't')
-with(grouping, ordiellipse(krakenmMDS.sam, site, draw='polygon', label=TRUE))
-dev.off()
-
-#stats
-permutest = adonis2(wisconsin(cast.gen.sam[,-1]) ~ site, data = grouping, permutations=100000, method = 'bray')
+# #Figure 3
+# png(filename = 'figures/kraken_ordiplot.png', height=4, units='in', res=600)
+# plot(krakenmMDS.sam, display='sites', type = 't')
+# with(grouping, ordiellipse(krakenmMDS.sam, site, draw='polygon', label=TRUE))
+# dev.off()
+# 
+# pdf('figures/kraken_ordiplot.pdf', height=4, units='in', res=600)
+# plot(krakenmMDS.sam, display='sites', type = 't')
+# with(grouping, ordiellipse(krakenmMDS.sam, site, draw='polygon', label=TRUE))
+# dev.off()
+# 
+# #stats
+# permutest = adonis2(wisconsin(cast.gen.sam[,-1]) ~ site, data = grouping, permutations=100000, method = 'bray')
 
 
 

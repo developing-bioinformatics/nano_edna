@@ -216,15 +216,15 @@ full_ordiplot
 ggsave('figures/full_ordiplot.png', full_ordiplot, height=7, width=12, dpi = 600)
 
 
-png(filename = 'figures/ordiplot.png', height=4, units='in', res=600)
-plot(mMDS.sam, display='sites', type = 't')
-with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
-dev.off()
-
-pdf('figures/ordiplot.pdf', height=4, units='in', res=600)
-plot(mMDS.sam, display='sites', type = 't')
-with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
-dev.off()
+# png(filename = 'figures/ordiplot.png', height=4, units='in', res=600)
+# plot(mMDS.sam, display='sites', type = 't')
+# with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
+# dev.off()
+# 
+# pdf('figures/ordiplot.pdf', height=4, units='in', res=600)
+# plot(mMDS.sam, display='sites', type = 't')
+# with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
+# dev.off()
 
 #stats
-permutest = adonis2(wisconsin(cast.gen.sam[,-1]) ~ site, data = grouping, permutations=100000, method = 'bray')
+# permutest = adonis2(wisconsin(cast.gen.sam[,-1]) ~ site, data = grouping, permutations=100000, method = 'bray')
