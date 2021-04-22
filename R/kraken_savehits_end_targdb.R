@@ -9,6 +9,8 @@ library(seqTools)
 library(dendextend)
 library(ggdendro)
 library(RColorBrewer)
+pal = brewer.pal(name='Paired', n = 12)
+
 
 
 krep.files = list.files('kraken_rep', full.names = T)
@@ -56,16 +58,56 @@ cast.gen.sam = reshape2::dcast(kproc.sample, sample ~ V6)
 cast.gen.sam[is.na(cast.gen.sam)] = 0
 rownames(cast.gen.sam) = cast.gen.sam[,1]
 grouping = cast.gen.sam %>% tidyr::separate(sample, c('site', 'sam')) %>% select(site, sam)
-mMDS.sam = metaMDS(cast.gen.sam[,-1], try=10000, k=3, distance = 'bray')
+krakenmMDS.sam = metaMDS(cast.gen.sam[,-1], try=10000, k=3, distance = 'bray')
+
+
+data.scores <- as.data.frame(scores(krakenmMDS.sam))  #Using the scores function from vegan to extract the site scores and convert to a data.frame
+data.scores$site <- rownames(data.scores)  # create a column of site names, from the rownames of data.scores
+grp <- rep(NA, nrow(data.scores))
+
+grp[grepl("Control", data.scores$site)] = 'Control'
+grp[grepl("OHara", data.scores$site)] = 'OHara'
+grp[grepl("Swamp", data.scores$site)] = 'Swamp'
+
+data.scores$grp <- grp  #  add the grp variable created earlier
+head(data.scores) 
+
+species.scores <- as.data.frame(scores(krakenmMDS.sam, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
+species.scores$species <- rownames(species.scores)  # create a column of species, from the rownames of species.scores
+head(species.scores)  #look at the data
+
+grp.a <- data.scores[data.scores$grp == "Control", ][chull(data.scores[data.scores$grp == "Control", c("NMDS1", "NMDS2")]), ]  # hull values for grp A
+grp.b <- data.scores[data.scores$grp == "OHara", ][chull(data.scores[data.scores$grp == "OHara", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+grp.c <- data.scores[data.scores$grp == "Swamp", ][chull(data.scores[data.scores$grp == "Swamp", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+
+
+hull.data <- rbind(grp.a, grp.b, grp.c)  #combine grp.a and grp.b
+hull.data
+
+kraken_ordiplot = ggplot() + 
+  geom_polygon(data=hull.data,aes(x=NMDS1,y=NMDS2,fill=grp,group=grp),alpha=0.30) + # add the convex hulls
+  #geom_text(data=species.scores,aes(x=NMDS1,y=NMDS2,label=species),alpha=0.5) +  # add the species labels
+  geom_point(data=data.scores,aes(x=NMDS1,y=NMDS2,shape=grp,colour=grp),size=4) + # add the point markers
+  coord_equal() +
+  theme_bw() +  
+  theme_minimal() +
+  theme(legend.position = 'bottom') +
+  scale_fill_brewer(palette = 'Set2') + scale_color_brewer(palette = 'Set2') +
+  ggtitle("Kraken2 Classification")
+
+  
+ 
+
+
 #Figure 3
-png(filename = 'figures/kraken_ordiplot.png')
-plot(mMDS.sam, display='sites', type = 't')
-with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
+png(filename = 'figures/kraken_ordiplot.png', height=4, units='in', res=600)
+plot(krakenmMDS.sam, display='sites', type = 't')
+with(grouping, ordiellipse(krakenmMDS.sam, site, draw='polygon', label=TRUE))
 dev.off()
 
-pdf('figures/kraken_ordiplot.pdf')
-plot(mMDS.sam, display='sites', type = 't')
-with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
+pdf('figures/kraken_ordiplot.pdf', height=4, units='in', res=600)
+plot(krakenmMDS.sam, display='sites', type = 't')
+with(grouping, ordiellipse(krakenmMDS.sam, site, draw='polygon', label=TRUE))
 dev.off()
 
 #stats
@@ -132,7 +174,6 @@ khits_fq_data = khits_fq_data %>%
 #   tidyr::separate(samname, c("samnum", "site", "sam_id", "amplicon", "replicate", "year", "minq"), sep = "_") %>%
 #   tidyr::unite(site_sam, c("site", "sam_id"))
 #   
-pal = brewer.pal(name='Paired', n = 12)
 
 ktileplot = ggplot(data = kproc.sample ) +
   geom_tile(aes(x=sample, y = V6, fill=freq)) +

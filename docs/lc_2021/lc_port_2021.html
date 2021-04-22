@@ -10,12 +10,12 @@
 
 <title>Monitoring plant biodiversity in aquatic eDNA with low-cost Nanopore Flongle sequencing</title>
 
-<script src="lc_2021_files/header-attrs-2.7/header-attrs.js"></script>
-<script src="lc_2021_files/accessible-code-block-0.0.1/empty-anchor.js"></script>
-<script src="lc_2021_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
-<script src="lc_2021_files/viz-1.8.2/viz.js"></script>
-<link href="lc_2021_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
-<script src="lc_2021_files/grViz-binding-1.0.6.1/grViz.js"></script>
+<script src="lc_port_2021_files/header-attrs-2.7/header-attrs.js"></script>
+<script src="lc_port_2021_files/accessible-code-block-0.0.1/empty-anchor.js"></script>
+<script src="lc_port_2021_files/htmlwidgets-1.5.1/htmlwidgets.js"></script>
+<script src="lc_port_2021_files/viz-1.8.2/viz.js"></script>
+<link href="lc_port_2021_files/DiagrammeR-styles-0.2/styles.css" rel="stylesheet" />
+<script src="lc_port_2021_files/grViz-binding-1.0.6.1/grViz.js"></script>
 
 
 
@@ -30,7 +30,7 @@ Font-awesome icons ie github or twitter
 <!--
 Google fonts api stuff
 -->
-<link href='https://fonts.googleapis.com/css?family=Special Elite' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
 <link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
 
 <!--
@@ -38,20 +38,18 @@ Here are the required style attributes for css to make this poster work :)
 -->
 <style>
 @page {
-size: 46in 32in;
+size: 33.1in 46.8in;
 margin: 0;
 padding: 0;
-background-color: #333333;
 }
 body {
 margin: 0px;
 padding: 0px;
-width: 46in;
-height: 32in;
+width: 33.1in;
+height: 46.8in;
 text-align: justify;
 font-size: 45px;
-background-color: #333333;
-color: white;
+line-height: 1.05;
 }
 /* RMarkdown Class Styles */
 /* center align leaflet map,
@@ -103,7 +101,7 @@ font-style: italic;
 }
 
 tbody tr:nth-child(odd) {
-    background-color: #33333320;
+    background-color: white20;
 }
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
   border-spacing: 0;
@@ -137,27 +135,31 @@ float: left;
 padding: 0px;
 }
 .outer {
-width: 46in;
-height: 32in;
--webkit-column-count: 2; /* Chrome, Safari, Opera */
--moz-column-count: 2; /* Firefox */
-column-count: 2;
+width: 33.1in;
+height: calc(46.8in *  (1 - 0.2 - 0.2 - 0.01) );
+-webkit-column-count: 3; /* Chrome, Safari, Opera */
+-moz-column-count: 3; /* Firefox */
+column-count: 3;
 -webkit-column-fill: auto;
 -moz-column-fill: auto;
 column-fill: auto;
--webkit-column-rule-width: 0.5;
--moz-column-rule-width: 0.5;
-column-rule-width: 0.5;
--webkit-column-rule-style: solid;
--moz-column-rule-style: solid;
-column-rule-style: solid;
+column-gap: 0;
+padding-left: 0cm;
+padding-right: 0cm;
+/* -webkit-column-rule-width: 50%;
+-moz-column-rule-width: 50%;
+column-rule-width: 50%; */
+-webkit-column-rule-style: none;
+-moz-column-rule-style: none;
+column-rule-style: none;
 -webkit-column-rule-color: black;
 -moz-column-rule-color: black;
 column-rule-color: black;
--webkit-column-gap: 50%;
 background-color: #333333;
 font-family: Rasa;
-color: white;
+margin-top: calc(46.8in *  0.2 );
+padding-top: 1em;
+padding-bottom: 1em;
 }
 span.citation {
   color: white;
@@ -171,19 +173,20 @@ color: white;
 font-size: 125pt;
 text-align: left;
 margin: 0;
-line-height: 90%;
+line-height: 98%;
 border-bottom: 0;
+font-weight: normal;
+background: 0;
 }
 #author {
-color: steelblue;
+color:steelblue;
 margin: 0;
-text-align: left;
-line-height: 65%;
+line-height: 85%;
 font-size: 1.17em;
 }
 #affiliation {
-padding-top: 1em;
-color: #00000060;
+padding-top: 0.1em;
+color: ;
 font-style: italic;
 font-size: 25px;
 margin: 0;
@@ -194,6 +197,9 @@ color: steelblue;
 .affiliation sup {
 font-size: 20px;
 }
+.author {
+text-align: left;
+}
 .author sup {
 font-size: 30px;
 }
@@ -202,50 +208,92 @@ color: white;
 margin: 0;
 line-height: 85%;
 font-size: 35px;
+text-align: left;
 }
-.outer h1 {
+.outer h1, h2, h3, h4, h5, h6 {
 text-align: center;
-margin-top: 0.5in;
-margin-bottom: 0.5in;
+margin: 0;
+font-weight: bold;
+}
+.section h1 {
+  text-align:center;
+  padding-bottom:5px;
+  background:
+    linear-gradient(
+      to left,
+      #333333 1%,
+      #333333 20%,
+      #33333375 33%,
+      #333333 50%,
+      #33333375 66%,
+      #333333 80%,
+      #333333 99%
+    )
+    left
+    bottom
+    #333333
+    no-repeat;
+  background-size:100% 5px ;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
 }
 .outer h2 {
 text-align: center;
 }
-.outer p {
+.outer p, .level2 {
 color: white;
 }
 .outer ol {
+padding-left: 8%;
+padding-right: 8%;
 text-align: left;
 }
 .main {
-width: calc(46in * 0.5);
-height: 32in;
+width: 33.1in;
+height: calc(46.8in * 0.2);
 position: absolute;
-margin-left: calc(46in * 0.25);
 background-color: #333333;
-color: #FFFFFF90;
-font-family: Special Elite;
-background-image: linear-gradient(#333333 50%, white);
+color: #ffffff90;
+font-family: Rasa;
+background-image: linear-gradient(#333333 50%,white);
 }
 .main strong {
-color: #FFFFFF;
+color: #ffffff;
 }
-img.main-img-left {
-width: 20%;
+.main strong > sup {
+color: #ffffff;
+}
+.main sup {
+color: #ffffff90;
+}
+#main-img-left {
+width: 10%;
 left: 0.5in;
 bottom: 0.2in;
 position: absolute;
 }
-img.main-img-right {
-width: 18%;
+#main-img-center {
+width: 10%;
+left: calc(33.1in * 0.45);
+bottom: 0.5in;
+position: absolute;
+}
+#main-img-right {
+width: 10%;
 right: 0.5in;
 bottom: 0.2in;
 position: absolute;
 }
 .main p {
-padding-top: 20%;
-font-size: 170px;
-text-align: left;
+font-size: 150px;
+font-family: Rasa;
+text-align: center;
+margin: 0;
+position: absolute;
+top: 50%;
+-ms-transform: translateY(-50%);
+transform: translateY(-50%);
+margin-left: 1em;
 }
 .fab {
 color: #00000060;
@@ -271,41 +319,63 @@ color: #00000060;
 font-size: 5px;
 text-decoration: none;
 }
-.github > .fab {
-color: #00000060;
-font-size: 40px;
-text-decoration: none;
-}
 .globetext {
 color: #00000060;
 font-size: 35px;
 text-decoration: none;
 }
 .poster_wrap {
-width: 46in;
-height: 32in;
+width: 33.1in;
+height: 46.8in;
 padding: 0cm;
-background-color: #333333;
 }
-span > #tab:mytable {
-  font-weight: bold;
+.main_bottom {
+width: 33.1in;
+height: calc(46.8in * 0.2);
+margin-top: calc(46.8in * (1 - 0.2));
+position: absolute;
+background-color: #333333;
+background-image: linear-gradient(white 10%, #333333);
 }
 .section {
   padding-left: 10mm;
   padding-right: 10mm;
 }
-.main p {
-  padding-left: 30mm;
-  padding-right: 30mm;
-}
-.main_pic {
-  width: 50%;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+span > #tab:mytable {
+  font-weight: bold;
 }
 .orcid img {
   width: 3%;
+}
+.emphasis {
+  background-color: #008080;
+  color: #ffffff;
+  border: solid #0b2045 3mm;
+  margin: 1em;
+  padding-left: 0;
+  padding-right: 0;
+}
+.emphasis h1 {
+  font-weight: bold;
+  background: none;
+  background-color: #0b2045;
+  padding-bottom: 5mm;
+  padding-top: 1mm;
+  margin-top: -1mm;
+  margin-right: -1mm;
+  margin-left: -1mm;
+}
+.emphasis blockquote {
+  border: 0;
+}
+.emphasis ol {
+  padding: 0;
+  padding-left: 8%;
+  font-size: 100%;
+  font-weight: bold;
+}
+.emphasis p {
+  color: #ffffff;
 }
 </style>
 </head>
@@ -313,24 +383,27 @@ span > #tab:mytable {
 
 
 <div class="poster_wrap">
+
 <div class="column outer">
-<br>
-<div class="title section">
-<h1 id="title">Monitoring plant biodiversity in aquatic eDNA with low-cost Nanopore Flongle sequencing</h1>
-<br>
+<div class="section">
+<h1 id="title">Monitoring plant biodiversity in aquatic eDNA with low-cost Nanopore Flongle sequencing</h1><br>
 <h3 id="author" class="author">
 
+Rob Harbert<sup> 1 2, <a class="orcid" href="https://orcid.org/0000-0002-1714-5033"><img src="https://raw.githubusercontent.com/brentthorne/posterdown/master/images/orcid.jpg"></a></sup><br>
+<a class="twitter" href="https://mobile.twitter.com/robharbert"><i class="fab fa-twitter"></i>&nbsp;&nbsp;@robharbert</a><br>
+
+<a class='envelope'><i class="fas fa-envelope"></i></a> <a href="mailto:rharbert@stonehill.edu" class="email">rharbert@stonehill.edu</a> <br>
 </h3>
 
-<h5 id="author_extra" class="author_extra">
-Rob Harbert<sup>1,2, <a class="orcid" href="https://orcid.org/0000-0002-1714-5033"><img src="https://raw.githubusercontent.com/brentthorne/posterdown/master/images/orcid.jpg"></a></sup>
+<h5 id="author_extra", class="author_extra">
 </h5>
+
 
 <p id="affiliation" class="affiliation">
 <sup>1</sup> Department of Biology, Stonehill College<br> <sup>2</sup> Sackler Institute for Comparative Genomics, American Museum of Natural History
 </p>
-
 </div>
+
 <div id="premise-of-the-study" class="section level1">
 <h1><em>Premise of the study</em></h1>
 <p>Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.</p>
@@ -340,20 +413,20 @@ Rob Harbert<sup>1,2, <a class="orcid" href="https://orcid.org/0000-0002-1714-503
 <p>We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from <em>psbA3</em>, <em>rbcLa</em>, <em>ITS2</em>, <em>18S</em>, <em>trnL</em> genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells. Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy. Figure <a href="#fig:flowfig">1</a></p>
 <p>The full protocol is available <a href="https://dx.doi.org/10.17504/protocols.io.bc4wiyxe">dx.doi.org/10.17504/protocols.io.bc4wiyxe</a></p>
 <div class="figure" style="text-align: center"><span id="fig:flowfig"></span>
-<div id="htmlwidget-c24b49a5c80beeb16c88" style="width:80%;height:1500px;" class="grViz html-widget"></div>
-<script type="application/json" data-for="htmlwidget-c24b49a5c80beeb16c88">{"x":{"diagram":"digraph flowchart {\n      # node definitions with substituted label text\n      bgcolor=\"#333333\"\n      node [fontname = Helvetica, \n            shape = rectangle,  \n            style = filled\n            fillcolor=white]        \n      tab1 [label = \"Field water filtration with 0.045 μm \"]\n      tab2 [label = \"DNA Extraction with DNEasy PowerWater Kit\"]\n      tab3 [label = \"PCR Target Amplification and Multiplex Barcoding\"]\n      tab4 [label = \"Pooled Sequencing with Flongle flowcells on MinION sequencer\"]\n      tab5 [label = \"Basecalling with Guppy\"]\n      tab6 [label = \"Taxonomic classification with BLAST + LCA and Kraken2\"]\n\n      # edge definitions with the node IDs\n      tab1 -> tab2 -> tab3 -> tab4 -> tab5 -> tab6;\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<div id="htmlwidget-dd2200417eecb26cb4ae" style="width:80%;height:1500px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-dd2200417eecb26cb4ae">{"x":{"diagram":"digraph flowchart {\n      # node definitions with substituted label text\n      bgcolor=\"#333333\"\n      node [fontname = Helvetica, \n            shape = rectangle,  \n            style = filled\n            fillcolor=white]        \n      tab1 [label = \"Field water filtration with 0.045 μm \"]\n      tab2 [label = \"DNA Extraction with DNEasy PowerWater Kit\"]\n      tab3 [label = \"PCR Target Amplification and Multiplex Barcoding\"]\n      tab4 [label = \"Pooled Sequencing with Flongle flowcells on MinION sequencer\"]\n      tab5 [label = \"Basecalling with Guppy\"]\n      tab6 [label = \"Taxonomic classification with BLAST + LCA and Kraken2\"]\n\n      # edge definitions with the node IDs\n      tab1 -> tab2 -> tab3 -> tab4 -> tab5 -> tab6;\n      }","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
 <p class="caption">
 Figure 1: General Methodological Workflow
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:classifig"></span>
-<img src="lc_2021_files/figure-html/classifig-1.png" alt="eDNA Classification Results" width="100%" />
+<img src="lc_port_2021_files/figure-html/classifig-1.png" alt="eDNA Classification Results" width="100%" />
 <p class="caption">
 Figure 2: eDNA Classification Results
 </p>
 </div>
-<div class="figure"><span id="fig:ordifig"></span>
-<img src="lc_2021_files/figure-html/ordifig-1.png" alt="Ordination plots" width="100%" />
+<div class="figure" style="text-align: center"><span id="fig:ordifig"></span>
+<img src="lc_port_2021_files/figure-html/ordifig-1.png" alt="Ordination plots" width="100%" />
 <p class="caption">
 Figure 3: Ordination plots
 </p>
@@ -375,9 +448,12 @@ Figure 3: Ordination plots
 
 </div>
 <div class="main">
-<p></p>
-https://www.artstor.org/wp-content/uploads/2013/12/logo_amnh-768x384.jpg
-https://www.logolynx.com/images/logolynx/36/36c6948e4b3a8d4237427359aa4f04e1.jpeg
+<p>Low-cost, portable sequencing enables experimental environmental DNA monitoring.</p>
+</div>
+<div class="main_bottom">
+<img id="main-img-left" src=https://www.artstor.org/wp-content/uploads/2013/12/logo_amnh-768x384.jpg>
+<img id="main-img-center" src=>
+<img id="main-img-right" src=https://www.logolynx.com/images/logolynx/36/36c6948e4b3a8d4237427359aa4f04e1.jpeg>
 </div>
 </div>
 

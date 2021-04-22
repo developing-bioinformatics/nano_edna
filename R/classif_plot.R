@@ -174,12 +174,54 @@ grouping = cast.gen.sam %>% tidyr::separate(site_sam, c('site', 'subsam')) %>% s
 mMDS.sam = metaMDS(cast.gen.sam[,-1], try=10000, k=3, distance = 'bray')
 
 #Figure 3
-png(filename = 'figures/ordiplot.png')
+
+bl_data.scores <- as.data.frame(scores(mMDS.sam))  #Using the scores function from vegan to extract the site scores and convert to a data.frame
+bl_data.scores$site <- rownames(bl_data.scores)  # create a column of site names, from the rownames of bl_data.scores
+bl_grp <- rep(NA, nrow(bl_data.scores))
+
+bl_grp[grepl("control", bl_data.scores$site)] = 'Control'
+bl_grp[grepl("OHara", bl_data.scores$site)] = 'OHara'
+bl_grp[grepl("Swamp", bl_data.scores$site)] = 'Swamp'
+
+bl_data.scores$grp <- bl_grp  #  add the grp variable created earlier
+head(bl_data.scores) 
+
+bl_species.scores <- as.data.frame(scores(krakenmMDS.sam, "species"))  #Using the scores function from vegan to extract the species scores and convert to a data.frame
+bl_species.scores$species <- rownames(bl_species.scores)  # create a column of species, from the rownames of bl_species.scores
+head(bl_species.scores)  #look at the data
+
+bl_grp.a <- bl_data.scores[bl_data.scores$grp == "Control", ][chull(bl_data.scores[bl_data.scores$grp == "Control", c("NMDS1", "NMDS2")]), ]  # hull values for grp A
+bl_grp.b <- bl_data.scores[bl_data.scores$grp == "OHara", ][chull(bl_data.scores[bl_data.scores$grp == "OHara", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+bl_grp.c <- bl_data.scores[bl_data.scores$grp == "Swamp", ][chull(bl_data.scores[bl_data.scores$grp == "Swamp", c("NMDS1", "NMDS2")]), ]  # hull values for grp B
+
+
+bl_hull.data <- rbind(bl_grp.a, bl_grp.b, bl_grp.c)  #combine grp.a and grp.b
+bl_hull.data
+
+blast_ordiplot = ggplot() + 
+  geom_polygon(data=bl_hull.data,aes(x=NMDS1,y=NMDS2,fill=grp,group=grp),alpha=0.30) + # add the convex hulls
+  #geom_text(data=bl_species.scores,aes(x=NMDS1,y=NMDS2,label=species),alpha=0.5) +  # add the species labels
+  geom_point(data=bl_data.scores,aes(x=NMDS1,y=NMDS2,shape=grp,colour=grp),size=4) + # add the point markers
+  coord_equal() +
+  theme_bw() +  
+  theme_minimal() +
+  theme(legend.position = 'bottom') +
+  scale_fill_brewer(palette = 'Set2') + scale_color_brewer(palette = 'Set2') +
+  ggtitle("BLAST Classification")
+
+
+full_ordiplot = blast_ordiplot + kraken_ordiplot + plot_annotation(tag_levels = 'A')
+full_ordiplot
+
+ggsave('figures/full_ordiplot.png', full_ordiplot, height=7, width=12, dpi = 600)
+
+
+png(filename = 'figures/ordiplot.png', height=4, units='in', res=600)
 plot(mMDS.sam, display='sites', type = 't')
 with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
 dev.off()
 
-pdf('figures/ordiplot.pdf')
+pdf('figures/ordiplot.pdf', height=4, units='in', res=600)
 plot(mMDS.sam, display='sites', type = 't')
 with(grouping, ordiellipse(mMDS.sam, site, draw='polygon', label=TRUE))
 dev.off()

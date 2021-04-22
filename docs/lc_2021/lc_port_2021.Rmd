@@ -1,9 +1,16 @@
 ---
+main_topsize: 0.2 #percent coverage of the poster
+main_bottomsize: 0.2
+
+#ESSENTIALS
 title: Monitoring plant biodiversity in aquatic eDNA with low-cost Nanopore Flongle sequencing
 author:
   - name: Rob Harbert
-    affil: 1,2
+    affil: 1 2
+    main: true
     orcid: '0000-0002-1714-5033'
+    twitter: 'robharbert'
+    email: 'rharbert@stonehill.edu'
 affiliation:
   - num: 1
     address: Department of Biology, Stonehill College
@@ -20,20 +27,39 @@ body_bgcol: "#333333"
 body_textcol: "white"
 sectitle_textcol: "white"
 sectitle_bgcol: "steelblue"
+poster_height: "46.8in"
+poster_width: "33.1in"
+main_fontfamily: 'Rasa'
+
+main_findings:
+  - "Low-cost, portable sequencing enables experimental environmental DNA monitoring."
 output: 
-  posterdown::posterdown_html:
+  posterdown::posterdown_betterport:
     self_contained: false
+    pandoc_args: --mathjax
+    number_sections: false
 bibliography: packages.bib
+link-citations: true
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,
+                      warning = FALSE,
+                      tidy = FALSE,
+                      message = FALSE,
+                      fig.align = 'center',
+                      out.width = "100%")
+options(knitr.table.format = "html")
 knitr::opts_chunk$set(dpi=300)
 ```
 
 # *Premise of the study* 
 
 Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.
+
+```{r, include=FALSE}
+knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
+```
 
 # *Methods* 
 
@@ -106,4 +132,3 @@ The workflow built around this platform provides end-to-end amplicon-based seque
 ```{r, include=FALSE}
 knitr::write_bib(c('knitr','rmarkdown','posterdown','pagedown'), 'packages.bib')
 ```
-
