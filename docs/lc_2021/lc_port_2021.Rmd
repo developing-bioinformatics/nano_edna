@@ -137,9 +137,9 @@ cost_table = data.frame(Component=as.character(),
                         Per_Sample_Cost=as.character(), 
                         stringsAsFactors = F)
 cost_table[1, ] = c('DNA Extraction: DNEasy PowerWater Kit',
-                    '$546 / 50 reactions x 5 amplicons each',
-                    '$2.18')
-cost_table[2, ] = c('Library Preparation: PCR Barcoding (SQK-PBK004',
+                    '$546 / 50 reactions x 6 amplicons each',
+                    '$1.82')
+cost_table[2, ] = c('Library Preparation: PCR Barcoding (SQK-PBK004)',
                     '$650 / 12 Flongle libraries x 12 barcoded amplicons',
                     '$4.51')
 cost_table[3, ] = c('Sequencing: Flongle Flowcell',
