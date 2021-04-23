@@ -8,7 +8,7 @@
 
 
 
-<title>Aquatic Plant eDNA with Nanopore</title>
+<title>Aquatic Plant eDNA Metabarcoding with Nanopore</title>
 
 <script src="lc_port_2021_files/header-attrs-2.7/header-attrs.js"></script>
 <script src="lc_port_2021_files/accessible-code-block-0.0.1/empty-anchor.js"></script>
@@ -132,7 +132,7 @@ padding: 0px;
 }
 .outer {
 width: 33.1in;
-height: calc(46.8in *  (1 - 0.2 - 0.1 - 0.01) );
+height: calc(46.8in *  (1 - 0.2 - 0.075 - 0.01) );
 -webkit-column-count: 3; /* Chrome, Safari, Opera */
 -moz-column-count: 3; /* Firefox */
 column-count: 3;
@@ -166,7 +166,7 @@ text-decoration: none;
 color: #008080;
 }
 #title {
-font-size: 125pt;
+font-size: 95pt;
 text-align: left;
 margin: 0;
 line-height: 98%;
@@ -188,7 +188,7 @@ font-size: 25px;
 margin: 0;
 }
 sup {
-color: #cc0000;
+color: #4aba3d;
 }
 .affiliation sup {
 font-size: 20px;
@@ -327,8 +327,8 @@ padding: 0cm;
 }
 .main_bottom {
 width: 33.1in;
-height: calc(46.8in * 0.1);
-margin-top: calc(46.8in * (1 - 0.1));
+height: calc(46.8in * 0.075);
+margin-top: calc(46.8in * (1 - 0.075));
 position: absolute;
 background-color: #0b4545;
 background-image: linear-gradient(#008080 10%, #0b4545);
@@ -382,7 +382,7 @@ span > #tab:mytable {
 
 <div class="column outer">
 <div class="section">
-<h1 id="title">Aquatic Plant eDNA with Nanopore</h1><br>
+<h1 id="title">Aquatic Plant eDNA Metabarcoding with Nanopore</h1><br>
 <h3 id="author" class="author">
 
 Rob Harbert<sup> 1, 2, <a class="orcid" href="https://orcid.org/0000-0002-1714-5033"><img src="https://raw.githubusercontent.com/brentthorne/posterdown/master/images/orcid.jpg"></a></sup><br>
@@ -407,12 +407,12 @@ p.caption {
 }
 </style>
 <div id="premise-of-the-study" class="section level1">
-<h1><em>Premise of the study</em></h1>
-<p>Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.</p>
+<h1>Premise of the study</h1>
+<p>Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity <span class="citation">(Thomsen and Willerslev <a href="#ref-thomsen2015environmental" role="doc-biblioref">2015</a>)</span>. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.</p>
 </div>
 <div id="methods" class="section level1">
-<h1><em>Methods</em></h1>
-<p>We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from <em>psbA3</em>, <em>rbcLa</em>, <em>ITS2</em>, <em>18S</em>, <em>trnL</em> genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells. Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy. Table <a href="#tab:flowtable">1</a>.</p>
+<h1>Methods</h1>
+<p>We extracted aquatic eDNA from an open pond and a seasonal wetland at Stonehill College in Easton, MA over a span of two weeks in June, 2019. Samples were amplified targeting 350bp to 890bp segments from <em>psbA3</em>, <em>rbcLa</em>, <em>ITS2</em>, <em>18S</em>, <em>trnL</em> genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells. Amplicon sequences were classified using Kraken2 <span class="citation">(Wood, Lu, and Langmead <a href="#ref-wood2019improved" role="doc-biblioref">2019</a>)</span> and BLAST <span class="citation">(Altschul et al. <a href="#ref-altschul1990basic" role="doc-biblioref">1990</a>)</span> followed by a lowest common ancestor algorithm using the <a href="https://ftp.ncbi.nih.gov/pub/taxonomy/">NCBI taxonomy</a>. Table <a href="#tab:flowtable">1</a>.</p>
 <table>
 <caption>
 <span id="tab:flowtable">Table 1: </span>General Workflow
@@ -471,7 +471,7 @@ Equimolar Pooled Sequencing
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
-Flongle R9.4.1 flowcells on MinION sequencer
+Flongle R9.4.1 flowcells on MinION
 </td>
 </tr>
 <tr>
@@ -486,47 +486,149 @@ Basecalling with Guppy 3.4.5 + high accuracy ‘flip-flop’ model
 <td style="text-align:left;">
 </td>
 <td style="text-align:left;">
+Taxonomic classification with:
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+BLAST + Lowest Common Anestor
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
 Kraken2 classification
 </td>
 </tr>
 </tbody>
 </table>
-<p>The full protocol is available here: <a href="https://dx.doi.org/10.17504/protocols.io.bc4wiyxe">dx.doi.org/10.17504/protocols.io.bc4wiyxe</a></p>
+<p>For more details on the methods used see <span class="citation">(Callahan and Harbert <a href="#ref-protocolsIO" role="doc-biblioref">2020</a>)</span>.</p>
 <div class="figure" style="text-align: center"><span id="fig:classifig"></span>
-<img src="lc_port_2021_files/figure-html/classifig-1.png" alt="eDNA Classification Results" width="100%" />
+<img src="lc_port_2021_files/figure-html/classifig-1.png" alt="eDNA Classification Results. (A) Total count of reads generated for each sample and amplicon. (B) Count of reads classified by BLAST to genus. (C) Count of reads classified by Kraken2 to genus. (D) Heatmap of read classification to all genera identified by BLAST. (E) Heatmap of read classification of all genera identified by Kraken2." width="100%" />
 <p class="caption">
-Figure 1: eDNA Classification Results
+Figure 1: eDNA Classification Results. (A) Total count of reads generated for each sample and amplicon. (B) Count of reads classified by BLAST to genus. (C) Count of reads classified by Kraken2 to genus. (D) Heatmap of read classification to all genera identified by BLAST. (E) Heatmap of read classification of all genera identified by Kraken2.
 </p>
 </div>
 <div class="figure" style="text-align: center"><span id="fig:ordifig"></span>
-<img src="lc_port_2021_files/figure-html/ordifig-1.png" alt="Ordination plots" width="100%" />
+<img src="lc_port_2021_files/figure-html/ordifig-1.png" alt="NMDS Ordination plots for (A) BLAST, and (B) Kraken 2 classifications to unambiguous genera." width="90%" />
 <p class="caption">
-Figure 2: Ordination plots
+Figure 2: NMDS Ordination plots for (A) BLAST, and (B) Kraken 2 classifications to unambiguous genera.
 </p>
 </div>
 </div>
 <div id="results" class="section level1">
-<h1><em>Results</em></h1>
-<p>Sequence analysis reveals highly local differences in plant diversity including both aquatic and terrestrial plant taxa Figure <a href="#fig:classifig">1</a> and Figure <a href="#fig:ordifig">2</a>.</p>
-<p>The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications of amplicon metabarcoding.</p>
+<h1>Results</h1>
+<p>Metabarcode sequence analysis and taxonomic classification reveals local differences in plant diversity including both aquatic and terrestrial plant taxa Figure <a href="#fig:classifig">1</a>. Taxonomic composition is reproducible within site and across a two week span between samples Figure <a href="#fig:ordifig">2</a>. All raw data are available at <a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA488629">NCBI BioProject: PRJNA488629</a>.</p>
+<p>The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications.</p>
+</div>
+<div id="cost-estimates" class="section level1">
+<h1>Cost Estimates</h1>
+<p>Sequencing relatively small datasets on Flongle flowcells provides insights and allows testing of methods at $70 per 5 amplicon sample costs. Table <a href="#tab:costtable">2</a>. Pooling amplicon primer pools and increased multiplexing could further reduce costs.</p>
+<table>
+<caption>
+<span id="tab:costtable">Table 2: </span>Consumable Materials Cost Estimates
+</caption>
+<thead>
+<tr>
+<th style="text-align:left;">
+Component
+</th>
+<th style="text-align:left;">
+Total_Cost
+</th>
+<th style="text-align:left;">
+Per_Sample_Cost
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+DNA Extraction: DNEasy PowerWater Kit
+</td>
+<td style="text-align:left;">
+$546 / 50 reactions x 5 amplicons each
+</td>
+<td style="text-align:left;">
+$2.18
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Library Preparation: PCR Barcoding (SQK-PBK004
+</td>
+<td style="text-align:left;">
+$650 / 12 Flongle libraries x 12 barcoded amplicons
+</td>
+<td style="text-align:left;">
+$4.51
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Sequencing: Flongle Flowcell
+</td>
+<td style="text-align:left;">
+$90 per flowcell / 12 amplicons
+</td>
+<td style="text-align:left;">
+$7.5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total per Amplicon
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+$14.19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total per Sample (5 amplicons)
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+~$71
+</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div id="next-steps" class="section level1">
-<h1><em>Next Steps</em></h1>
+<h1>Next Steps</h1>
 <ul>
-<li>Experiment with primer pools (increase multiplexing)</li>
+<li>Investigate reproducibility and seasonal variation</li>
+<li>Experiment with primer pools (to increase multiplexing)</li>
 <li>Exchange rapid for ligation chemistry in library prep</li>
 <li>Pipeline publication: <a href="https://github.com/developing-bioinformatics/nano_edna" class="uri">https://github.com/developing-bioinformatics/nano_edna</a></li>
 <li>Bonito Basecalling -&gt; Higher single molecule accuracy will improve taxonomic classification</li>
 <li>Expand to 96 barcodes and MinION flowcells</li>
 </ul>
+<p><a href="https://developing-bioinformatics.github.io/nano_edna/lc_2021/lc_port_2021.pdf">Live Version of this Poster <em>check here for updates</em></a></p>
 </div>
-<div id="resources" class="section level1">
-<h1><em>Resources</em></h1>
-<ul>
-<li><a href="https://github.com/developing-bioinformatics/eDNA_BLAST">Code Repository</a></li>
-<li><a href="https://www.ncbi.nlm.nih.gov/bioproject/PRJNA488629">NCBI BioProject: PRJNA488629</a></li>
-<li><a href="https://developing-bioinformatics.github.io/nano_edna/lc_2021/lc_2021.html">Live Version of this Poster <em>check here for updates</em></a></li>
-</ul>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references hanging-indent">
+<div id="ref-altschul1990basic">
+<p>Altschul, Stephen F, Warren Gish, Webb Miller, Eugene W Myers, and David J Lipman. 1990. “Basic Local Alignment Search Tool.” <em>Journal of Molecular Biology</em> 215 (3): 403–10.</p>
+</div>
+<div id="ref-protocolsIO">
+<p>Callahan, Jordan, and Robert Harbert. 2020. <em>Aquatic eDNA Sampling and Plant Community Metabarcoding with Portable Nanopore Flongle Sequencing (V0.0.3) V.3</em>. <a href="https://dx.doi.org/10.17504/protocols.io.bc4wiyxe">https://dx.doi.org/10.17504/protocols.io.bc4wiyxe</a>.</p>
+</div>
+<div id="ref-thomsen2015environmental">
+<p>Thomsen, Philip Francis, and Eske Willerslev. 2015. “Environmental Dna–an Emerging Tool in Conservation for Monitoring Past and Present Biodiversity.” <em>Biological Conservation</em> 183: 4–18.</p>
+</div>
+<div id="ref-wood2019improved">
+<p>Wood, Derrick E, Jennifer Lu, and Ben Langmead. 2019. “Improved Metagenomic Analysis with Kraken 2.” <em>Genome Biology</em> 20 (1): 1–13.</p>
+</div>
+</div>
 </div>
 
 </div>

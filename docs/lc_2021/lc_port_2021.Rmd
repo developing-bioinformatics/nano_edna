@@ -1,13 +1,13 @@
 ---
 main_topsize: 0.2 #percent coverage of the poster
-main_bottomsize: 0.1
+main_bottomsize: 0.075
 main_fontfamily: 'Rasa'
 #main_textcol: '#10a73d'
 main_findings:
   - "Monitoring plant biodiversity in aquatic environmental DNA with low-cost Nanopore Flongle sequencing."
 
 #ESSENTIALS
-title: Aquatic Plant eDNA with Nanopore
+title: Aquatic Plant eDNA Metabarcoding with Nanopore
 author:
   - name: Rob Harbert
     affil: 1, 2
@@ -26,24 +26,22 @@ logoleft_name: https&#58;//www.artstor.org/wp-content/uploads/2013/12/logo_amnh-
 #primary_colour: "#333333"
 #secondary_colour: "white"
 #author_textcol: "#4aba3d"
-#accent_colour: "#4aba3d"
+accent_colour: "#4aba3d"
 #body_bgcol: "#333333"
 #body_textcol: "white"
 #sectitle_textcol: "white"
 #sectitle_bgcol: "steelblue"
 poster_height: "46.8in"
 poster_width: "33.1in"
-
-
-
-
+title_textsize: "95pt"
+caption_textsize: "20pt"
 output: 
   posterdown::posterdown_betterport:
     self_contained: false
     pandoc_args: --mathjax
     number_sections: false
     highlight: espresso
-bibliography: packages.bib
+bibliography: references.bib
 link-citations: true
 ---
 
@@ -63,17 +61,18 @@ options(knitr.table.format = "html")
 knitr::opts_chunk$set(dpi=300)
 ```
 
-# *Premise of the study* 
 
-Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.
+# Premise of the study
+
+Cellular and cell-free DNA obtained from environmental samples of soil, water, and air can detect local biodiversity [@thomsen2015environmental]. Environmental DNA (eDNA) sequencing typically relies on standard molecular techniques and resources. Here we present a fully portable workflow designed to work with limited infrastructure for the collection, isolation, extraction, sequencing, and analysis of aquatic eDNA for the monitoring of plant biodiversity.
 
 ```{r, include=FALSE}
 knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
 ```
 
-# *Methods* 
+# Methods
 
-We extracted aquatic eDNA from an open pond and a seasonal wetland. Samples were amplified targeting 350bp to 890bp segments from *psbA3*, *rbcLa*, *ITS2*, *18S*, *trnL* genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells.  Amplicon sequences were classified using Kraken2 and BLAST followed by a lowest common ancestor algorithm using the NCBI taxonomy. Table \@ref(tab:flowtable).
+We extracted aquatic eDNA from an open pond and a seasonal wetland at Stonehill College in Easton, MA over a span of two weeks in June, 2019. Samples were amplified targeting 350bp to 890bp segments from *psbA3*, *rbcLa*, *ITS2*, *18S*, *trnL* genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells.  Amplicon sequences were classified using Kraken2 [@wood2019improved] and BLAST [@altschul1990basic] followed by a lowest common ancestor algorithm using the [NCBI taxonomy](https://ftp.ncbi.nih.gov/pub/taxonomy/). Table \@ref(tab:flowtable).
 
 ```{R flowtable}
 
@@ -85,11 +84,11 @@ workflow_table[2, ] = c('DNA Extraction', 'DNA Extraction with DNEasy PowerWater
 workflow_table[3, ] = c('Target Amplification', 'PCR Target Amplification and 12x Multiplex Barcoding')
 workflow_table[4, ] = c('Sequencing', 'PCR Barcoding kit (SQK-PBK004) library preparation')
 workflow_table[5, ] = c('', 'Equimolar Pooled Sequencing')
-workflow_table[6, ] = c('', 'Flongle R9.4.1 flowcells on MinION sequencer')
+workflow_table[6, ] = c('', 'Flongle R9.4.1 flowcells on MinION')
 workflow_table[7, ] = c('Bioinformatics', 'Basecalling with Guppy 3.4.5 + high accuracy \'flip-flop\' model')
-workflow_table[8, ] = c('', 'Taxonomic classification')
-workflow_table[8, ] = c('', 'BLAST + Lowest Common Anestor')
-workflow_table[8, ] = c('', 'Kraken2 classification')
+workflow_table[8, ] = c('', 'Taxonomic classification with:')
+workflow_table[9, ] = c('', 'BLAST + Lowest Common Anestor')
+workflow_table[10, ] = c('', 'Kraken2 classification')
 
 knitr::kable(
   workflow_table, format = "html",
@@ -98,10 +97,9 @@ knitr::kable(
   escape = FALSE)
 ```
 
-The full protocol is available here: [dx.doi.org/10.17504/protocols.io.bc4wiyxe](https://dx.doi.org/10.17504/protocols.io.bc4wiyxe)
+For more details on the methods used see [@protocolsIO].
 
-
-```{r classifig, fig.align='center', fig.cap='eDNA Classification Results', out.width="100%", fig.height=14}
+```{r classifig, fig.align='center', fig.cap='eDNA Classification Results. (A) Total count of reads generated for each sample and amplicon. (B) Count of reads classified by BLAST to genus. (C) Count of reads classified by Kraken2 to genus. (D) Heatmap of read classification to all genera identified by BLAST. (E) Heatmap of read classification of all genera identified by Kraken2.', out.width="100%", fig.height=13}
 #par(bg = '#333333')
 par(mar = c(0, 0, 0, 0))
 #suppressMessages(require(imager))
@@ -110,7 +108,7 @@ image <- imager::load.image(image_filename)
 plot(image, axes=F)
 ```
 
-```{r ordifig, echo=FALSE, fig.align='center', fig.cap='Ordination plots', out.width="100%", fig.height=7}
+```{r ordifig, echo=FALSE, fig.align='center', fig.cap='NMDS Ordination plots for (A) BLAST, and (B) Kraken 2 classifications to unambiguous genera.', out.width="90%", fig.height=9}
 #par(bg = '#333333')
 par(mar = c(0, 0, 0, 0))
 #suppressMessages(require(imager))
@@ -120,28 +118,56 @@ plot(image, axes=F)
 
 ```
 
-# *Results* 
-
-Sequence analysis reveals highly local differences in plant diversity including both aquatic and terrestrial plant taxa Figure \@ref(fig:classifig) and Figure \@ref(fig:ordifig). 
-
-The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications of amplicon metabarcoding.
 
 
-# *Next Steps*
 
-+ Experiment with primer pools (increase multiplexing)
+# Results
+
+Metabarcode sequence analysis and taxonomic classification reveals local differences in plant diversity including both aquatic and terrestrial plant taxa Figure \@ref(fig:classifig). Taxonomic composition is reproducible within site and across a two week span between samples Figure \@ref(fig:ordifig). All raw data are available at [NCBI BioProject: PRJNA488629](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA488629).
+
+The workflow built around this platform provides end-to-end amplicon-based sequencing that can be used to detect nearby plant diversity. The Oxford Nanopore MinION sequencer and the low throughput Flongle flowcell provides a sequencing platform that combines portability, low cost, and ease of use that are essential features for field applications.
+
+# Cost Estimates
+
+Sequencing relatively small datasets on Flongle flowcells provides insights and allows testing of methods at $70 per 5 amplicon sample costs. Table \@ref(tab:costtable). Pooling amplicon primer pools and increased multiplexing could further reduce costs.
+
+```{R costtable}
+cost_table = data.frame(Component=as.character(), 
+                        Total_Cost=as.character(), 
+                        Per_Sample_Cost=as.character(), 
+                        stringsAsFactors = F)
+cost_table[1, ] = c('DNA Extraction: DNEasy PowerWater Kit',
+                    '$546 / 50 reactions x 5 amplicons each',
+                    '$2.18')
+cost_table[2, ] = c('Library Preparation: PCR Barcoding (SQK-PBK004',
+                    '$650 / 12 Flongle libraries x 12 barcoded amplicons',
+                    '$4.51')
+cost_table[3, ] = c('Sequencing: Flongle Flowcell',
+                    '$90 per flowcell / 12 amplicons',
+                    '$7.5')
+cost_table[4, ] = c('Total per Amplicon',
+                    '',
+                    '$14.19')
+cost_table[5, ] = c('Total per Sample (5 amplicons)',
+                    '',
+                    '~$71')
+knitr::kable(
+  cost_table, format = "html",
+  caption = "Consumable Materials Cost Estimates",
+  align = "l", 
+  escape = FALSE)
+```
+
+# Next Steps
+
++ Investigate reproducibility and seasonal variation
++ Experiment with primer pools (to increase multiplexing)
 + Exchange rapid for ligation chemistry in library prep
 + Pipeline publication: https://github.com/developing-bioinformatics/nano_edna
 + Bonito Basecalling -> Higher single molecule accuracy will improve taxonomic classification
 + Expand to 96 barcodes and MinION flowcells
 
+[Live Version of this Poster *check here for updates*](https://developing-bioinformatics.github.io/nano_edna/lc_2021/lc_port_2021.pdf)
 
-# *Resources*
 
-+ [Code Repository](https://github.com/developing-bioinformatics/eDNA_BLAST)
-+ [NCBI BioProject: PRJNA488629](https://www.ncbi.nlm.nih.gov/bioproject/PRJNA488629)
-+ [Live Version of this Poster *check here for updates*](https://developing-bioinformatics.github.io/nano_edna/lc_2021/lc_2021.html)
-
-```{r, include=FALSE}
-knitr::write_bib(c('knitr','rmarkdown','posterdown','pagedown'), 'packages.bib')
-```
+# References

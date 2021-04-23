@@ -210,10 +210,14 @@ blast_ordiplot = ggplot() +
   ggtitle("BLAST Classification")
 
 
-full_ordiplot = blast_ordiplot + kraken_ordiplot + plot_annotation(tag_levels = 'A')
+full_ordiplot = (blast_ordiplot + xlim(-1.5, 2) + ylim(-1, 1)) /
+  (kraken_ordiplot + xlim(-1.5, 2) + ylim(-1, 1)) + 
+  plot_annotation(tag_levels = 'A') +  
+  plot_layout(widths=c(1,1)) 
+
 full_ordiplot
 
-ggsave('figures/full_ordiplot.png', full_ordiplot, height=7, width=12, dpi = 600)
+ggsave('figures/full_ordiplot.png', full_ordiplot, height=7, width=7, dpi = 600)
 
 
 # png(filename = 'figures/ordiplot.png', height=4, units='in', res=600)
