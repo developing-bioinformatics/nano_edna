@@ -72,7 +72,7 @@ knitr::write_bib(c('posterdown', 'rmarkdown','pagedown'), 'packages.bib')
 
 # Methods
 
-We extracted aquatic eDNA from an open pond and a seasonal wetland at Stonehill College in Easton, MA over a span of two weeks in June, 2019. Samples were amplified targeting 350bp to 890bp segments from *psbA3*, *rbcLa*, *ITS2*, *18S*, *trnL* genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells.  Amplicon sequences were classified using Kraken2 [@wood2019improved] and BLAST [@altschul1990basic] followed by a lowest common ancestor algorithm using the [NCBI taxonomy](https://ftp.ncbi.nih.gov/pub/taxonomy/). Table \@ref(tab:flowtable).
+We extracted aquatic eDNA from an open pond and a seasonal wetland at Stonehill College in Easton, MA over a span of two weeks in June, 2019. Samples were amplified targeting 350bp to 890bp segments from *psbA3*, *MATK*, *rbcLa*, *ITS2*, *18S*, and *trnL* genomic regions. Amplified DNA was barcoded, pooled up to twelve reactions per run, and sequenced on the Oxford Nanopore MinION sequencer using the low-throughput Flongle flowcells.  Amplicon sequences were classified using Kraken2 [@wood2019improved] and BLAST [@altschul1990basic] followed by a lowest common ancestor algorithm using the [NCBI taxonomy](https://ftp.ncbi.nih.gov/pub/taxonomy/). Table \@ref(tab:flowtable).
 
 ```{R flowtable}
 
@@ -129,7 +129,7 @@ The workflow built around this platform provides end-to-end amplicon-based seque
 
 # Cost Estimates
 
-Sequencing relatively small datasets on Flongle flowcells provides insights and allows testing of methods at $70 per 5 amplicon sample costs. Table \@ref(tab:costtable). Pooling amplicon primer pools and increased multiplexing could further reduce costs.
+Sequencing relatively small datasets on Flongle flowcells provides insights and allows testing of methods at $85 per 6 amplicon sample costs. Table \@ref(tab:costtable). Pooling amplicon primer pools and increased multiplexing could further reduce costs.
 
 ```{R costtable}
 cost_table = data.frame(Component=as.character(), 
@@ -148,9 +148,9 @@ cost_table[3, ] = c('Sequencing: Flongle Flowcell',
 cost_table[4, ] = c('Total per Amplicon',
                     '',
                     '$14.19')
-cost_table[5, ] = c('Total per Sample (5 amplicons)',
+cost_table[5, ] = c('Total per Sample (6 amplicons)',
                     '',
-                    '~$71')
+                    '~$85')
 knitr::kable(
   cost_table, format = "html",
   caption = "Consumable Materials Cost Estimates",
