@@ -1,11 +1,13 @@
 # script to get gene specific databases:
-
+require(rentrez)
 set_entrez_key("55549707f8ed138bcb423d98d739c7789408")
 Sys.getenv("ENTREZ_KEY")
+
+
 # to do list:
 # add time reporting
 # add flex query construction
-# parallel?
+# parallelize?
 
 
 get_amplicon_db <- function(target, db.dir = 'blast_db', key = NULL) {
@@ -16,8 +18,8 @@ get_amplicon_db <- function(target, db.dir = 'blast_db', key = NULL) {
   
   require(rentrez)
   require(rBLAST)
-  library(rentrez)
-  by = 1000
+
+  by = 10000
   query = paste(target, '[All Fields] AND (plants[filter] AND ("0"[SLEN] : "100000"[SLEN]))',sep='') # allow more flexibility in searches
   genesearch <-
     entrez_search(db = "nuccore",
@@ -43,12 +45,12 @@ get_amplicon_db <- function(target, db.dir = 'blast_db', key = NULL) {
   return()
 }
 
-get_amplicon_db('rbcL', key =Sys.getenv("ENTREZ_KEY"))
-get_amplicon_db('trnL', key =Sys.getenv("ENTREZ_KEY"))
-get_amplicon_db('psbA', key =Sys.getenv("ENTREZ_KEY"))
-get_amplicon_db('MATK', key =Sys.getenv("ENTREZ_KEY"))
-get_amplicon_db('ITS2', key =Sys.getenv("ENTREZ_KEY"))
-get_amplicon_db('18S', key =Sys.getenv("ENTREZ_KEY"))
+#get_amplicon_db('rbcL', key =Sys.getenv("ENTREZ_KEY"))
+#get_amplicon_db('trnL', key =Sys.getenv("ENTREZ_KEY"))
+#get_amplicon_db('psbA', key =Sys.getenv("ENTREZ_KEY"))
+#get_amplicon_db('MATK', key =Sys.getenv("ENTREZ_KEY"))
+#get_amplicon_db('ITS2', key =Sys.getenv("ENTREZ_KEY"))
+#get_amplicon_db('18S', key =Sys.getenv("ENTREZ_KEY"))
 
 
 

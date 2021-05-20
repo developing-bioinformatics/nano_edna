@@ -1,0 +1,196 @@
+#!/usr/bin/Rscript --vanilla
+
+##### R cli for running metabarcoding analysis with nano_edna
+### Author: Rob Harbert
+### Date: 2021
+
+library(cli)
+library(optparse)
+
+option_list = list(
+  make_option(c("-d", "--download"), action="store_true", default=FALSE,
+              help="Download data from bioproject"),
+  make_option(c("--sra"), type="character", default="PRJNA605442", 
+              help="Provide an SRA BioProject or Run accession number to download [default=%default]"),
+  make_option(c("-c", "--customdb"), type="character", default=NULL, 
+              help="Path to database files OR a comma separated string of gene names to build custom database using string matching to gene name search"),
+  make_option(c("--datadir"), type="character", default="data",
+              help="Data directory path"),
+  make_option(c("--outdir"), type="character", default="results",
+              help="Output directory path"),
+  make_option(c("-t", "--threads"), type="integer", default=2,
+              help="Number of threads to use for parallel tasks"),
+  make_option(c("-k", "--kraken"), action="store_true", default=FALSE,
+              help="Run kraken2 classification"),
+  make_option(c("-b", "--blast"), action="store_true", default=FALSE,
+              help="Run BLAST classification"),
+  make_option(c("-i", "--install"), action="store_true", default=FALSE,
+              help="Install Kraken2 and BLAST")
+  
+); 
+
+opt_parser = OptionParser(option_list=option_list);
+opt = parse_args(opt_parser);
+
+#set environmental parameters
+outdir=opt$outdir
+datadir=opt$datadir
+nclus=opt$threads
+kraken=opt$kraken
+blast=opt$blast
+blastbase='' # base directory for BLAST executables
+kraken2base='' # base directory for Kraken2 executables
+
+if(dir.exists(outdir)){} else {dir.create(outdir)}
+if(dir.exists(datadir)){} else {dir.create(datadir)}
+
+suppressMessages(source('dev/core.R'))
+
+
+cli_h1("Starting nano_edna: Pipeline for analyzing Nanopore generated eDNA metabarcoding data")
+
+#installing kraken2 and BLAST
+if(opt$install == TRUE){
+  cli_h2(paste("Checking BLAST and Kraken2 installations"))
+  
+  #### Set up installation check
+  # check path for BLAST, kraken2
+  kraken2_path = system('which kraken2', intern=T)
+  blast_path = system('which blastn', intern=T)
+  
+  if(is.null(kraken2_path)){
+    #local install from github
+    cli_alert_info("Trying to install kraken2 locally")
+    download.file("https://github.com/DerrickWood/kraken2/archive/refs/heads/master.zip", "master.zip")
+    unzip("master.zip")
+    system("cd kraken2-master; bash install_kraken2.sh kraken2")
+  } else {
+    cli_alert_info(paste("Kraken2 found at", kraken2_path))
+  }
+  
+  if(is.null(blast_path)){
+    #local install
+    cli_h3("Trying to install BLAST locally")
+    download.file("ftp://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/2.11.0/ncbi-blast-2.11.0+-x64-linux.tar.gz", "blast.tar.gz")
+    system("tar -zxvf blast.tar.gz")
+    ncbi=list.files(pattern = '-blast-')
+    blastbase = paste(getwd(), ncbi, sep='/')
+    system("rm -f blast.tar.gz")
+  } else {
+    cli_alert_info(paste("BLAST found at", blast_path))
+  }
+  
+}
+
+
+# download from SRA
+if(opt$download == TRUE){
+  cli_h2(paste("Downloading from SRA", opt$sra))
+  suppressMessages(download_sra(proj = opt$sra, dir.out = datadir))
+}
+
+# build custom database (query by gene name?)
+if(!is.null(opt$customdb)){
+  if(dir.exists(opt$customdb)){
+    cli_alert_info(paste("Using custom database found at", opt$customdb))
+  } else {
+    cli_h2(paste("Building custom database files"))
+    suppressMessages(source('dev/get_amplicon_db.R'))
+    #detect pattern 
+    #gene ids
+    customdb = strsplit(opt$customdb, "[,]")
+    #gene names
+    for(gn in unlist(customdb)){
+      cli_alert_info(paste("Getting data for ", gn, ". This may take some time!", sep=''))
+      suppressMessages(get_amplicon_db(gn, key = Sys.getenv("ENTREZ_KEY"))) # get gene sequences from GenBank and build custom blast database
+    }
+  
+  suppressMessages(source('dev/kraken_amplicon_db.R')) #build kraken2 database from blast database
+  
+  #build taxonomizr database from krakendb
+  require(taxonomizr)
+  prepareDatabase('kraken_db/taxonomy/accessionTaxa.sql') # this takes a while
+  tax_db = 'kraken_db/taxonomy' 
+  tax_db_files = list.files(tax_db, full.names = TRUE)
+  nodes = tax_db_files[grepl('nodes', tax_db_files)]
+  names = tax_db_files[grepl('names', tax_db_files)]
+  accession = tax_db_files[grepl('accessionTaxa', tax_db_files)]
+  taxaNodes<-read.nodes.sql(nodes)
+  taxaNames<-read.names.sql(names)
+  cli_alert_info(paste("testing taxonomy database.... ", accessionToTaxa("KC960551", accession)))
+
+  } 
+}
+
+
+# Run classification
+if(kraken){
+  # run kraken classification
+  suppressMessages(library(Biostrings))
+  suppressMessages(library(ggplot2))
+  suppressMessages(library(ShortRead))
+  suppressMessages(library(dplyr))
+  suppressMessages(library(stringi))
+  suppressMessages(library(forcats))
+  suppressMessages(library(ggsci))
+  files_in = datadir
+  res_out = paste(outdir, "/kraken_out", sep='')
+  kraken_reports = paste(outdir, '/kraken_rep', sep='')
+  kreads_out = paste(outdir, '/kraken_classif', sep='')
+  kdb = 'kraken_db'
+  #source('R/core.R')
+  files = list.files(files_in, full.names = TRUE)
+  
+  if(dir.exists(res_out)){} else {dir.create(res_out)}
+  
+  for (i in 1:length(files)) {
+    
+    samname = tools::file_path_sans_ext(basename(files[[i]]))
+    
+    print(paste("Starting file:", samname, 'round', i, sep = ' '))
+    print(date())
+    p = proc.time()
+    
+    #files should be one or more fastq files
+    
+    #grep amplicon databases in ./blast_db
+    if(grepl('control', samname)){
+      amplicon = strsplit(samname, "_")[[1]][3]
+    } else {
+      amplicon = strsplit(samname, '_')[[1]][4]
+    }
+    if (grepl('psbA', amplicon)) {amplicon='psbA'}
+    if (grepl('rbcL', amplicon)) {amplicon='rbcL'}
+    
+    print(amplicon)
+    kreport = paste(kraken_reports, "/", samname, '.csv', sep = '')
+    kout = paste(res_out, '/kraken.out.', samname, '.', amplicon, '.csv', sep = '')
+    readsout = paste(kreads_out, '/classified.', samname, '.', amplicon, '.fastq', sep = '')
+    #kraken2 --db $kdb  --threads 1 --use-names --report kreport.tab --fastq-input $targdata > kraken.out
+    run_kraken = paste('kraken2 --db',
+                       kdb,
+                       '--threads',
+                       nclus, 
+                       '--use-names --report', 
+                       kreport, 
+                       '--classified-out',
+                       readsout,
+                       files[i],
+                       ">", 
+                       kout)
+    system(run_kraken)
+    
+    xp = proc.time() - p
+    print(paste("Last iteration took:", xp[[3]], sep = ' '))
+  }
+  
+  
+}
+
+if(blast){
+  # run BLAST classification
+  
+}
+
+
+

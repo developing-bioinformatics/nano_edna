@@ -1,6 +1,6 @@
 # convert BLAST database to Kraken2 database
 # run get_amplicon_db.R first
-source('get_amplicon_db.R')
+#source('get_amplicon_db.R')
 
 buildKrakenDBfromBLASTdb <- function(blast.db = 'blast_db', kraken.db='kraken_db', threads=2){
   if(dir.exists(paste(kraken.db, "/taxonomy"))){
@@ -22,4 +22,4 @@ buildKrakenDBfromBLASTdb <- function(blast.db = 'blast_db', kraken.db='kraken_db
 }
 
 
-buildKrakenDBfromBLASTdb('blast_db', 'kraken_db', threads=24)
+buildKrakenDBfromBLASTdb('blast_db', 'kraken_db', threads=nclus)
